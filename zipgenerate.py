@@ -51,14 +51,14 @@ class ZipChunkInfo(object):
                 data.append(self.fd.read(self.spacing)[0])
             return data
 
-    def closeChunks(self):
+    def closeChunkFiles(self):
         if self.chunkFiles:
             for path in self.chunkFiles:
                 try:
                     self.chunkFiles[path][1].close()
                 except:
                     pass
-                del self.chunkFiles[path]
+            self.chunkFiles.clear()
                 
 class ZipTemplate(object):
     def __init__(self, chunks):
@@ -74,6 +74,10 @@ class ZipTemplate(object):
         
     def __len__(self):
         return self.cdirPos + len(self.ending) 
+        
+    def close(self):
+        for chunk in self.chunks:
+            chunk.closeChunkFiles()
     
     def read(self, pos, count):
         data = bytearray()
@@ -119,3 +123,4 @@ if __name__ == '__main__':
     zt = ZipTemplate((c1,c2))
     with open("out.zip", "wb") as z:
         z.write(zt.read(0,len(zt)))
+    zt.close()
