@@ -1,7 +1,6 @@
 import os
 import zlib
 import struct
-from io import BytesIO
 
 class ZipChunkInfo(object):
     def __init__(self, inPath, outPath, offset=0, spacing=1, length=-1, chunkFiles=None):
@@ -113,7 +112,6 @@ class ZipTemplate(object):
         return data
             
 if __name__ == '__main__':
-    print("hi")
     chunkFiles = {}
     zipPos = 0
     c1 = ZipChunkInfo("LICENSE", "lic.txt", chunkFiles = chunkFiles)
