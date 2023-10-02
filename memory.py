@@ -4,7 +4,7 @@ from __future__ import print_function, absolute_import, division
 import logging
 
 from collections import defaultdict
-from errno import ENOENT
+from errno import ENOENT, ENODATA
 from stat import S_IFDIR, S_IFLNK, S_IFREG
 from time import time
 
@@ -62,7 +62,7 @@ class Memory(LoggingMixIn, Operations):
         try:
             return attrs[name]
         except KeyError:
-            return ''       # Should return ENOATTR
+            raise FuseOSError(ENODATA)
 
     def listxattr(self, path):
         attrs = self.files[path].get('attrs', {})
@@ -84,7 +84,7 @@ class Memory(LoggingMixIn, Operations):
         return self.fd
 
     def read(self, path, size, offset, fh):
-        return self.data[path][offset:offset + size]
+        return bytes(self.data[path][offset:offset + size])
 
     def readdir(self, path, fh):
         return ['.', '..'] + [x[1:] for x in self.files if x != '/']
@@ -155,22 +155,25 @@ class Memory(LoggingMixIn, Operations):
 if __name__ == '__main__':
     import argparse
     import ast
+    import subprocess
     from template import FileTemplate 
     
     parser = argparse.ArgumentParser()
     parser.add_argument('mount')
     parser.add_argument('datafile')
     args = parser.parse_args()
+    subprocess.call(["fusermount", "-u", args.mount],stderr=subprocess.DEVNULL)
 
-    logging.basicConfig(level=logging.DEBUG)
+    #logging.basicConfig(level=logging.DEBUG)
     mem = Memory()
-    data = ast.literal_eval(args.datafile)
-    print(data)
+    with open(args.datafile) as f:
+        data = ast.literal_eval(f.read())
     chunkFiles = {}
     for line in data:
         ft = FileTemplate(line, chunkFiles={})
-        mem.create(ft.outPath, line.get("attrs", 0o770000))
+        mem.create(ft.outPath, line.get("attrs", 0o700))
         print(line)
         mem.data[ft.outPath] = ft
+        mem.files[ft.outPath]['st_size'] = len(ft)
     
     fuse = FUSE(mem, args.mount, foreground=True, allow_other=False)

@@ -67,8 +67,6 @@ class FileChunk(object):
 
 class ZipChunk(FileChunk):
     def __init__(self, *args, **kwargs):
-        print(args)
-        print(kwargs)
         super().__init__(*args, **kwargs)
         self.crc32 = zlib.crc32(self.read(0, self.length))
         p = bytes(self.outPath, 'ascii')
