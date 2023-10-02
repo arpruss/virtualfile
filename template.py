@@ -2,7 +2,6 @@ import os
 import zlib
 import struct
 from datetime import datetime
-from dateutil.tz import tzlocal
 
 def getItemHelper(read, length, key):
     if isinstance(key, slice):

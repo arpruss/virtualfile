@@ -23,7 +23,7 @@ class Memory(LoggingMixIn, Operations):
         self.fd = 0
         now = time()
         self.files['/'] = dict(
-            st_mode=(S_IFDIR | 0o755),
+            st_mode=(S_IFDIR | 0o777),
             st_ctime=now,
             st_mtime=now,
             st_atime=now,
@@ -162,16 +162,20 @@ if __name__ == '__main__':
     parser.add_argument('mount')
     parser.add_argument('datafile')
     args = parser.parse_args()
-    subprocess.call(["fusermount", "-u", args.mount],stderr=subprocess.DEVNULL)
+    try:
+        subprocess.call(["fusermount", "-u", args.mount],stderr=subprocess.DEVNULL)
+    except:
+        pass
 
     #logging.basicConfig(level=logging.DEBUG)
     mem = Memory()
     with open(args.datafile) as f:
         data = ast.literal_eval(f.read())
+    print(args)
     chunkFiles = {}
     for line in data:
         ft = FileTemplate(line, chunkFiles={})
-        mem.create(ft.outPath, line.get("attrs", 0o700))
+        mem.create(ft.outPath, line.get("attrs", 0o777))
         print(line)
         mem.data[ft.outPath] = ft
         mem.files[ft.outPath]['st_size'] = len(ft)
