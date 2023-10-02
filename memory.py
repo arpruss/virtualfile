@@ -154,9 +154,23 @@ class Memory(LoggingMixIn, Operations):
 
 if __name__ == '__main__':
     import argparse
+    import ast
+    from template import FileTemplate 
+    
     parser = argparse.ArgumentParser()
     parser.add_argument('mount')
+    parser.add_argument('datafile')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.DEBUG)
-    fuse = FUSE(Memory(), args.mount, foreground=True, allow_other=True)
+    mem = Memory()
+    data = ast.literal_eval(args.datafile)
+    print(data)
+    chunkFiles = {}
+    for line in data:
+        ft = FileTemplate(line, chunkFiles={})
+        mem.create(ft.outPath, line.get("attrs", 0o770000))
+        print(line)
+        mem.data[ft.outPath] = ft
+    
+    fuse = FUSE(mem, args.mount, foreground=True, allow_other=False)

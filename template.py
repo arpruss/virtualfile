@@ -4,11 +4,18 @@ import struct
 from datetime import datetime
 from dateutil.tz import tzlocal
 
-class ZipChunkInfo(object):
-    def __init__(self, inPath, outPath, offset=0, spacing=1, length=-1, chunkFiles=None):
+def getItemHelper(read, length, key):
+    if isinstance(key, slice):
+        start,stop,step = key.indices(length)
+        assert step == 1
+        return read(start, stop-start)
+    else:
+        return read(key, 1)[0]
+
+class FileChunk(object):
+    def __init__(self, inPath, outPath, offset=0, spacing=1, length=None, chunkFiles=None):
         if chunkFiles is None:
             chunkFiles = {}
-        self.zipPos = zipPos
         self.chunkFiles = chunkFiles
         if inPath in chunkFiles:
             size = chunkFiles[inPath][0]
@@ -20,7 +27,7 @@ class ZipChunkInfo(object):
         if offset > size:
             self.offset = 0
             self.length = 0
-        elif length < 0 or offset + spacing * length > size:
+        elif length is None or offset + spacing * length > size:
             self.length = (size - offset) // spacing
             self.offset = offset
         else:
@@ -28,21 +35,13 @@ class ZipChunkInfo(object):
             self.offset = offset
         self.spacing = spacing
         self.outPath = outPath
-        self.crc32 = zlib.crc32(self.read(0, self.length))
-        p = bytes(self.outPath, 'ascii')
-        now = datetime.now() ## TODO: fix timezone
-        self.date = (now.date().day) | (now.date().month << 5) | ((now.date().year-1980)<<9)
-        self.time = (now.time().second//2) | (now.time().minute<<5) | (now.time().hour<<11)
-        print(now.time().hour)
-        self.zipShortHeader = struct.pack("<IHHHHHIIIHH",#"<I<H<H<H<H<H<I<I<I<H<H",
-            0x04034b50,0x14,0,0,self.time,self.date,self.crc32,self.length,self.length,len(p),0)+p
-        self.zipChunkLength = len(self.zipShortHeader) + self.length
         
-    def zipLongHeader(self,zipPos):
-        p = bytes(self.outPath, 'ascii')
-        return struct.pack("<IHHHHHHIIIHHHHHII",
-            0x02014b50,0x14,0x14,0,0,self.time,self.date,self.crc32,self.length,self.length,len(p),0,0,0,0,0,zipPos)+p
-            
+    def __len__(self):
+        return self.length
+        
+    def __getitem__(self, key):
+        return getItemHelper(self.read, len(self), key)
+        
     def read(self, pos, count):
         if pos >= self.length:
             return b''
@@ -57,7 +56,7 @@ class ZipChunkInfo(object):
                 data.append(self.fd.read(self.spacing)[0])
             return data
 
-    def closeChunkFiles(self):
+    def close(self):
         if self.chunkFiles:
             for path in self.chunkFiles:
                 try:
@@ -65,10 +64,30 @@ class ZipChunkInfo(object):
                 except:
                     pass
             self.chunkFiles.clear()
-                
+
+class ZipChunk(FileChunk):
+    def __init__(self, *args, **kwargs):
+        print(args)
+        print(kwargs)
+        super().__init__(*args, **kwargs)
+        self.crc32 = zlib.crc32(self.read(0, self.length))
+        p = bytes(self.outPath, 'ascii')
+        now = datetime.now() ## TODO: fix timezone
+        self.date = (now.date().day) | (now.date().month << 5) | ((now.date().year-1980)<<9)
+        self.time = (now.time().second//2) | (now.time().minute<<5) | (now.time().hour<<11)
+        self.zipShortHeader = struct.pack("<IHHHHHIIIHH",#"<I<H<H<H<H<H<I<I<I<H<H",
+            0x04034b50,0x14,0,0,self.time,self.date,self.crc32,self.length,self.length,len(p),0)+p
+        self.zipChunkLength = len(self.zipShortHeader) + self.length
+        
+    def zipLongHeader(self,zipPos):
+        p = bytes(self.outPath, 'ascii')
+        return struct.pack("<IHHHHHHIIIHHHHHII",
+            0x02014b50,0x14,0x14,0,0,self.time,self.date,self.crc32,self.length,self.length,len(p),0,0,0,0,0,zipPos)+p
+                            
 class ZipTemplate(object):
-    def __init__(self, chunks):
+    def __init__(self, outPath, chunks):
         self.chunks = chunks
+        self.outPath = outPath
         cdir = bytearray()
         zipPos = 0
         for chunk in chunks:
@@ -83,8 +102,11 @@ class ZipTemplate(object):
         
     def close(self):
         for chunk in self.chunks:
-            chunk.closeChunkFiles()
+            chunk.close()
     
+    def __getitem__(self, key):
+        return getItemHelper(self.read, len(self), key)
+        
     def read(self, pos, count):
         data = bytearray()
         zipPos = 0
@@ -120,13 +142,26 @@ class ZipTemplate(object):
             assert start >= 0
             data += self.ending[start:start+toCopy]
         return data
+
+def FileTemplate(desc,chunkFiles={}):
+    outPath = desc["outPath"]
+    def chunkArgs(data):
+        return { "offset":data.get("offset",0), "spacing":data.get("spacing", 1), "length":data.get("length", None) }
+
+    if "inPath" in desc:
+        return FileChunk(desc["inPath"], outPath,  chunkFiles=chunkFiles, **chunkArgs(desc))
+    else:
+        return ZipTemplate(outPath, tuple(ZipChunk(c["inPath"], c["outPath"], chunkFiles=chunkFiles, **chunkArgs(c)) for c in desc["zip"] ))
             
 if __name__ == '__main__':
-    chunkFiles = {}
-    zipPos = 0
-    c1 = ZipChunkInfo("LICENSE", "lic.txt", offset = 0, spacing = 2, chunkFiles = chunkFiles)
-    c2 = ZipChunkInfo("memory.py", "mem.txt", offset = 5, length = 7, chunkFiles = chunkFiles)
-    zt = ZipTemplate((c1,c2))
-    with open("out.zip", "wb") as z:
-        z.write(zt.read(0,len(zt)))
-    zt.close()
+    ft = FileTemplate({
+        "outPath": "out.zip",
+        "zip": [
+            { "outPath":"lic.txt", "inPath":"LICENSE", "offset":0, "spacing":2 },
+            { "outPath":"mem.txt", "inPath":"memory.py", "offset":5, "length":7 },
+        ]
+        })
+    with open(ft.outPath, "wb") as z:
+        z.write(ft[:])
+    ft.close()
+    
