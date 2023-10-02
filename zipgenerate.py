@@ -19,7 +19,7 @@ class ZipChunkInfo(object):
             self.offset = 0
             self.length = 0
         elif length < 0 or offset + spacing * length > size:
-            self.length = size - offset
+            self.length = (size - offset) // spacing
             self.offset = offset
         else:
             self.length = length
@@ -114,8 +114,8 @@ class ZipTemplate(object):
 if __name__ == '__main__':
     chunkFiles = {}
     zipPos = 0
-    c1 = ZipChunkInfo("LICENSE", "lic.txt", chunkFiles = chunkFiles)
-    c2 = ZipChunkInfo("memory.py", "mem.txt", chunkFiles = chunkFiles)
+    c1 = ZipChunkInfo("LICENSE", "lic.txt", offset = 0, spacing = 2, chunkFiles = chunkFiles)
+    c2 = ZipChunkInfo("memory.py", "mem.txt", offset = 5, length = 7, chunkFiles = chunkFiles)
     zt = ZipTemplate((c1,c2))
     with open("out.zip", "wb") as z:
         z.write(zt.read(0,len(zt)))
