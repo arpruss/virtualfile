@@ -1,0 +1,10 @@
+[
+    {
+        "outPath": "/out.zip",
+        "zip": [
+            { "outPath":"lic.txt", "inPath":"LICENSE", "offset":0, "spacing":2 },
+            { "outPath":"mem.txt", "inPath":"memory.py", "offset":5, "length":7 },
+        ]
+        },
+    { "outPath": "/license", "inPath":"LICENSE" }
+]
