@@ -1,6 +1,8 @@
 import os
 import zlib
 import struct
+from datetime import datetime
+from dateutil.tz import tzlocal
 
 class ZipChunkInfo(object):
     def __init__(self, inPath, outPath, offset=0, spacing=1, length=-1, chunkFiles=None):
@@ -28,14 +30,18 @@ class ZipChunkInfo(object):
         self.outPath = outPath
         self.crc32 = zlib.crc32(self.read(0, self.length))
         p = bytes(self.outPath, 'ascii')
+        now = datetime.now() ## TODO: fix timezone
+        self.date = (now.date().day) | (now.date().month << 5) | ((now.date().year-1980)<<9)
+        self.time = (now.time().second//2) | (now.time().minute<<5) | (now.time().hour<<11)
+        print(now.time().hour)
         self.zipShortHeader = struct.pack("<IHHHHHIIIHH",#"<I<H<H<H<H<H<I<I<I<H<H",
-            0x04034b50,0x14,0,0,0,0,self.crc32,self.length,self.length,len(p),0)+p
+            0x04034b50,0x14,0,0,self.time,self.date,self.crc32,self.length,self.length,len(p),0)+p
         self.zipChunkLength = len(self.zipShortHeader) + self.length
         
     def zipLongHeader(self,zipPos):
         p = bytes(self.outPath, 'ascii')
         return struct.pack("<IHHHHHHIIIHHHHHII",
-            0x02014b50,0x14,0x14,0,0,0,0,self.crc32,self.length,self.length,len(p),0,0,0,0,0,zipPos)+p
+            0x02014b50,0x14,0x14,0,0,self.time,self.date,self.crc32,self.length,self.length,len(p),0,0,0,0,0,zipPos)+p
             
     def read(self, pos, count):
         if pos >= self.length:
