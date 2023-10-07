@@ -165,7 +165,7 @@ class ZipTemplate(object):
 def FileTemplate(desc,chunkFiles={}):
     outPath = desc["outPath"]
     def chunkArgs(data):
-        return { "offset":data.get("offset",0), "spacing":data.get("spacing", 1), "length":data.get("length", None) }
+        return { "offset":data.get("offset",0), "spacing":data.get("spacing", 1), "length":data.get("length", None), "cache":data.get("cache", False) }
 
     if "inPath" in desc:
         return FileChunk(desc["inPath"], outPath,  chunkFiles=chunkFiles, **chunkArgs(desc))

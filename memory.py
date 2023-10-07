@@ -171,7 +171,6 @@ if __name__ == '__main__':
     mem = Memory()
     with open(args.datafile) as f:
         data = ast.literal_eval(f.read())
-    print(args)
     chunkFiles = {}
     for line in data:
         ft = FileTemplate(line, chunkFiles={})
