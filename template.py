@@ -50,11 +50,8 @@ class FileChunk(object):
             return size, fd
         else:
             cmd = path[5:]
-            print("start pipe")
             p = subprocess.Popen(cmd, shell=True, stdin=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdout=subprocess.PIPE, universal_newlines=False)
-            print("reading")
             data = p.stdout.read()
-            print("done")
             return len(data),io.BytesIO(data)
         
     def __len__(self):
@@ -153,6 +150,8 @@ class ZipTemplate(object):
                     if count <= 0:
                         return data
                 zipPos += chunk.length
+            else:
+                zipPos += len(chunk.zipShortHeader) + chunk.length
         if count <= 0 or pos + count <= zipPos:
             return data
         if pos < zipPos + len(self.ending):
