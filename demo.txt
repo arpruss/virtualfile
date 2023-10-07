@@ -2,6 +2,7 @@
     {
         "outPath": "/out.zip",
         "zip": [
+#            { "outPath":"licfull.txt", "inPath":"pipe:cat LICENSE" },
             { "outPath":"lic.txt", "inPath":"LICENSE", "offset":0, "spacing":2 },
             { "outPath":"mem.txt", "inPath":"memory.py", "offset":5, "length":7 },
         ]

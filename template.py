@@ -1,6 +1,8 @@
 import os
 import zlib
 import struct
+import io
+import subprocess
 from datetime import datetime
 
 def getItemHelper(read, length, key):
@@ -12,7 +14,7 @@ def getItemHelper(read, length, key):
         return read(key, 1)[0]
 
 class FileChunk(object):
-    def __init__(self, inPath, outPath, offset=0, spacing=1, length=None, chunkFiles=None):
+    def __init__(self, inPath, outPath, offset=0, spacing=1, length=None, cache=False, chunkFiles=None):
         if chunkFiles is None:
             chunkFiles = {}
         self.chunkFiles = chunkFiles
@@ -20,8 +22,7 @@ class FileChunk(object):
             size = chunkFiles[inPath][0]
             self.fd = chunkFiles[inPath][1]
         else:
-            size = os.path.getsize(inPath)
-            self.fd = open(inPath, "rb")
+            size,self.fd = FileChunk.openInPath(inPath, cache)
             chunkFiles[inPath] = (size, self.fd)
         if offset > size:
             self.offset = 0
@@ -34,6 +35,27 @@ class FileChunk(object):
             self.offset = offset
         self.spacing = spacing
         self.outPath = outPath
+        
+    @classmethod
+    def openInPath(cls, path, cache):
+        if not path.startswith("pipe:"):
+            if path.startswith("file:"):
+                path = path[5:]
+            size = os.path.getsize(path)
+            fd = open(path, "rb")
+            if cache:
+                cached = io.BytesIO(fd.read(size))
+                fd.close()
+                return size, cached
+            return size, fd
+        else:
+            cmd = path[5:]
+            print("start pipe")
+            p = subprocess.Popen(cmd, shell=True, stdin=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdout=subprocess.PIPE, universal_newlines=False)
+            print("reading")
+            data = p.stdout.read()
+            print("done")
+            return len(data),io.BytesIO(data)
         
     def __len__(self):
         return self.length
