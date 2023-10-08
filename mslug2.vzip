@@ -1,0 +1,18 @@
+(
+    {
+        "outPath": "/mslug2.zip",
+        "zip": [
+            { "outPath":"241-m1.m1", "inPath":"mslug2/mslug2_game_z80" },
+            { "outPath":"241-pg1.p1", "inPath":"mslug2/mslug2_game_m68k", "length":1048576 },
+            { "outPath":"241-p2.sp2", "inPath":"mslug2/mslug2_game_m68k", "offset":1048576 },
+            { "outPath":"241-v1.v1", "inPath":"mslug2/mslug2_adpcm", "length":4194304 },
+            { "outPath":"241-v2.v2", "inPath":"mslug2/mslug2_adpcm", "offset":4194304 },
+            { "outPath":"241-s1.s1", "inPath":"mslug2/mslug2_game_sfix", "filter":"neogeo_sfix" },
+            { "outPath":"241-c1.c1", "inPath":"pipe:./fixcrom mslug2/mslug2_tiles", "length":0x800000, "offset":0, "spacing":2 },
+            { "outPath":"241-c2.c2", "inPath":"pipe:./fixcrom mslug2/mslug2_tiles", "length":0x800000, "offset":1, "spacing":2 },
+            { "outPath":"241-c3.c3", "inPath":"pipe:./fixcrom mslug2/mslug2_tiles", "length":0x800000, "offset":0x1000000, "spacing":2 },
+            { "outPath":"241-c4.c4", "inPath":"pipe:./fixcrom mslug2/mslug2_tiles", "length":0x800000, "offset":0x1000001, "spacing":2 },
+        ]
+        },
+    { "outPath": "/neogeo.zip", "inPath":"neogeo.zip" },
+)
