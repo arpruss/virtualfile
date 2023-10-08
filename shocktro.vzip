@@ -18,5 +18,5 @@
             { "outPath":"238-c8.c8", "inPath":"pipe:./fixcrom shocktro/shocktro_tiles", "length":0x400000, "offset":0x1800001, "spacing":2 },
         ]
         },
-    { "outPath": "/neogeo.zip", "inPath":"neogeo.zip" },
+    #{ "outPath": "/neogeo.zip", "inPath":"neogeo.zip" },
 )
