@@ -7,5 +7,6 @@
             { "outPath":"mem.txt", "inPath":"memory.py", "offset":5, "length":7 },
         ]
         },
-    { "outPath": "/license", "inPath":"LICENSE" }
+    { "outPath": "/license", "inPath":"LICENSE" },
+    { "outPath": "/demo.zip", "inPath":"demo.zip" },
 ]

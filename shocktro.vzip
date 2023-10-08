@@ -1,0 +1,22 @@
+(
+    {
+        "outPath": "/shocktro.zip",
+        "zip": [
+            { "outPath":"238-m1.m1", "inPath":"shocktro/shocktro_game_z80" },
+            { "outPath":"238-pg1.p1", "inPath":"shocktro/shocktro_game_m68k", "length":1048576 },
+            { "outPath":"238-p2.p2", "inPath":"shocktro/shocktro_game_m68k", "offset":1048576 },
+            { "outPath":"238-v1.v1", "inPath":"shocktro/shocktro_adpcm", "length":4194304 },
+            { "outPath":"238-v2.v2", "inPath":"shocktro/shocktro_adpcm", "offset":4194304 },
+            { "outPath":"238-s1.s1", "inPath":"shocktro/shocktro_game_sfix", "filter":"neogeo_sfix" },
+            { "outPath":"238-c1.c1", "inPath":"pipe:./fixcrom shocktro/shocktro_tiles", "length":0x400000, "offset":0, "spacing":2 },
+            { "outPath":"238-c2.c2", "inPath":"pipe:./fixcrom shocktro/shocktro_tiles", "length":0x400000, "offset":1, "spacing":2 },
+            { "outPath":"238-c3.c3", "inPath":"pipe:./fixcrom shocktro/shocktro_tiles", "length":0x400000, "offset":0x800000, "spacing":2 },
+            { "outPath":"238-c4.c4", "inPath":"pipe:./fixcrom shocktro/shocktro_tiles", "length":0x400000, "offset":0x800001, "spacing":2 },
+            { "outPath":"238-c5.c5", "inPath":"pipe:./fixcrom shocktro/shocktro_tiles", "length":0x400000, "offset":0x1000000, "spacing":2 },
+            { "outPath":"238-c6.c6", "inPath":"pipe:./fixcrom shocktro/shocktro_tiles", "length":0x400000, "offset":0x1000001, "spacing":2 },
+            { "outPath":"238-c7.c7", "inPath":"pipe:./fixcrom shocktro/shocktro_tiles", "length":0x400000, "offset":0x1800000, "spacing":2 },
+            { "outPath":"238-c8.c8", "inPath":"pipe:./fixcrom shocktro/shocktro_tiles", "length":0x400000, "offset":0x1800001, "spacing":2 },
+        ]
+        },
+    { "outPath": "/neogeo.zip", "inPath":"neogeo.zip" },
+)

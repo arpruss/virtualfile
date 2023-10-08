@@ -14,7 +14,7 @@ def getItemHelper(read, length, key):
         return read(key, 1)[0]
 
 class FileChunk(object):
-    def __init__(self, inPath, outPath, offset=0, spacing=1, length=None, cache=False, chunkFiles=None):
+    def __init__(self, inPath, outPath, offset=0, spacing=1, length=None, cache=False, filter=None, chunkFiles=None):
         if chunkFiles is None:
             chunkFiles = {}
         self.chunkFiles = chunkFiles
@@ -22,13 +22,13 @@ class FileChunk(object):
             size = chunkFiles[inPath][0]
             self.fd = chunkFiles[inPath][1]
         else:
-            size,self.fd = FileChunk.openInPath(inPath, cache)
+            size,self.fd = FileChunk.openInPath(inPath, filter, cache)
             chunkFiles[inPath] = (size, self.fd)
         if offset > size:
             self.offset = 0
             self.length = 0
-        elif length is None or offset + spacing * length > size:
-            self.length = (size - offset) // spacing
+        elif length is None or offset + spacing * (length - 1) + 1 > size:
+            self.length = ( (size - offset - 1) // spacing ) + 1
             self.offset = offset
         else:
             self.length = length
@@ -37,22 +37,25 @@ class FileChunk(object):
         self.outPath = outPath
         
     @classmethod
-    def openInPath(cls, path, cache):
+    def openInPath(cls, path, filter, cache):
+        apply = (lambda x : x) if filter is None else filter
         if not path.startswith("pipe:"):
             if path.startswith("file:"):
                 path = path[5:]
             size = os.path.getsize(path)
             fd = open(path, "rb")
-            if cache:
-                cached = io.BytesIO(fd.read(size))
+            if cache or filter is not None:
+                cached = bytearray(apply(fd.read(size)))
+                #cached = io.BytesIO(apply(fd.read(size)))
                 fd.close()
-                return size, cached
+                return size,cached
             return size, fd
         else:
             cmd = path[5:]
             p = subprocess.Popen(cmd, shell=True, stdin=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdout=subprocess.PIPE, universal_newlines=False)
             data = p.stdout.read()
-            return len(data),io.BytesIO(data)
+            #return len(data),io.BytesIO(apply(data))
+            return len(data),bytearray(apply(data))
         
     def __len__(self):
         return self.length
@@ -63,8 +66,10 @@ class FileChunk(object):
     def read(self, pos, count):
         if pos >= self.length:
             return b''
-        if pos + count >= self.length:
+        if pos + count > self.length:
             count = self.length - pos
+        if isinstance(self.fd,bytearray):
+            return self.fd[self.offset+self.spacing*pos:self.offset+self.spacing*(pos+count):self.spacing]
         self.fd.seek(self.offset + self.spacing * pos)
         if self.spacing == 1:
             return bytearray(self.fd.read(count))
@@ -78,7 +83,9 @@ class FileChunk(object):
         if self.chunkFiles:
             for path in self.chunkFiles:
                 try:
-                    self.chunkFiles[path][1].close()
+                    fd = self.chunkFiles[path][1]
+                    if not isinstance(fd,bytearray):
+                        fd.close()
                 except:
                     pass
             self.chunkFiles.clear()
@@ -161,10 +168,57 @@ class ZipTemplate(object):
             data += self.ending[start:start+toCopy]
         return data
 
+def filter_neogeo_sfix(data):
+    out = bytearray(len(data)//32*32)
+    for i in range(0,len(out),32):
+        out[i+0x00] = data[i+0x02]
+        out[i+0x01] = data[i+0x06]
+        out[i+0x02] = data[i+0x0A]
+        out[i+0x03] = data[i+0x0E]
+        out[i+0x04] = data[i+0x12]
+        out[i+0x05] = data[i+0x16]
+        out[i+0x06] = data[i+0x1A]
+        out[i+0x07] = data[i+0x1E]
+        out[i+0x08] = data[i+0x03]
+        out[i+0x09] = data[i+0x07]
+        out[i+0x0A] = data[i+0x0B]
+        out[i+0x0B] = data[i+0x0F]
+        out[i+0x0C] = data[i+0x13]
+        out[i+0x0D] = data[i+0x17]
+        out[i+0x0E] = data[i+0x1B]
+        out[i+0x0F] = data[i+0x1F]
+        out[i+0x10] = data[i+0x00]
+        out[i+0x11] = data[i+0x04]
+        out[i+0x12] = data[i+0x08]
+        out[i+0x13] = data[i+0x0C]
+        out[i+0x14] = data[i+0x10]
+        out[i+0x15] = data[i+0x14]
+        out[i+0x16] = data[i+0x18]
+        out[i+0x17] = data[i+0x1C]
+        out[i+0x18] = data[i+0x01]
+        out[i+0x19] = data[i+0x05]
+        out[i+0x1A] = data[i+0x09]
+        out[i+0x1B] = data[i+0x0D]
+        out[i+0x1C] = data[i+0x11]
+        out[i+0x1D] = data[i+0x15]
+        out[i+0x1E] = data[i+0x19]
+        out[i+0x1F] = data[i+0x1D]
+    return out
+        
 def FileTemplate(desc,chunkFiles={}):
     outPath = desc["outPath"]
+    
+    def getFilter(f):
+        if f is None:
+            return None
+        elif f == "neogeo_sfix":
+            return filter_neogeo_sfix
+        else:
+            assert(False)
+    
     def chunkArgs(data):
-        return { "offset":data.get("offset",0), "spacing":data.get("spacing", 1), "length":data.get("length", None), "cache":data.get("cache", False) }
+        return { "offset":data.get("offset",0), "spacing":data.get("spacing", 1), "length":data.get("length", None), 
+            "cache":data.get("cache", False), "filter":getFilter(data.get("filter", None)) }
 
     if "inPath" in desc:
         return FileChunk(desc["inPath"], outPath,  chunkFiles=chunkFiles, **chunkArgs(desc))
