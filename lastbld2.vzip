@@ -1,0 +1,22 @@
+(
+    {
+        "outPath": "/lastbld2.zip",
+        "zip": [
+            { "outPath":"243-m1.m1", "inPath":"lastbld2/m1.bin" },
+            { "outPath":"243-pg1.p1", "inPath":"lastbld2/p1.bin", "length":1048576 },
+            { "outPath":"243-pg2.sp2", "inPath":"lastbld2/p1.bin", "offset":1048576 },
+            { "outPath":"243-v1.v1", "inPath":"lastbld2/v1.bin", "length":0x400000 },
+            { "outPath":"243-v2.v2", "inPath":"lastbld2/v1.bin", "offset":0x400000, "length":0x400000 },
+            { "outPath":"243-v3.v3", "inPath":"lastbld2/v1.bin", "offset":0x800000, "length":0x400000 },
+            { "outPath":"243-v4.v4", "inPath":"lastbld2/v1.bin", "offset":0xC00000, "length":0x400000 },
+            { "outPath":"243-s1.s1", "inPath":"lastbld2/s1.bin", }, #"filter":"neogeo_sfix" },
+            { "outPath":"243-c1.c1", "inPath":"pipe:./fixcrom2 lastbld2/c1.bin", "length":0x800000, "offset":0, "spacing":2 },
+            { "outPath":"243-c2.c2", "inPath":"pipe:./fixcrom2 lastbld2/c1.bin", "length":0x800000, "offset":1, "spacing":2 },
+            { "outPath":"243-c3.c3", "inPath":"pipe:./fixcrom2 lastbld2/c1.bin", "length":0x800000, "offset":0x1000000, "spacing":2 },
+            { "outPath":"243-c4.c4", "inPath":"pipe:./fixcrom2 lastbld2/c1.bin", "length":0x800000, "offset":0x1000001, "spacing":2 },
+            { "outPath":"243-c5.c5", "inPath":"pipe:./fixcrom2 lastbld2/c1.bin", "length":0x800000, "offset":0x2000000, "spacing":2 },
+            { "outPath":"243-c6.c6", "inPath":"pipe:./fixcrom2 lastbld2/c1.bin", "length":0x800000, "offset":0x2000001, "spacing":2 },
+        ]
+        },
+    { "outPath": "/neogeo.zip", "inPath":"neogeo.zip" },
+)
