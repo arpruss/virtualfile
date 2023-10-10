@@ -5,6 +5,54 @@ import io
 import subprocess
 from datetime import datetime
 
+def filter_neogeo_sfix(data):
+    out = bytearray(len(data)//32*32)
+    for i in range(0,len(out),32):
+        out[i+0x00] = data[i+0x02]
+        out[i+0x01] = data[i+0x06]
+        out[i+0x02] = data[i+0x0A]
+        out[i+0x03] = data[i+0x0E]
+        out[i+0x04] = data[i+0x12]
+        out[i+0x05] = data[i+0x16]
+        out[i+0x06] = data[i+0x1A]
+        out[i+0x07] = data[i+0x1E]
+        out[i+0x08] = data[i+0x03]
+        out[i+0x09] = data[i+0x07]
+        out[i+0x0A] = data[i+0x0B]
+        out[i+0x0B] = data[i+0x0F]
+        out[i+0x0C] = data[i+0x13]
+        out[i+0x0D] = data[i+0x17]
+        out[i+0x0E] = data[i+0x1B]
+        out[i+0x0F] = data[i+0x1F]
+        out[i+0x10] = data[i+0x00]
+        out[i+0x11] = data[i+0x04]
+        out[i+0x12] = data[i+0x08]
+        out[i+0x13] = data[i+0x0C]
+        out[i+0x14] = data[i+0x10]
+        out[i+0x15] = data[i+0x14]
+        out[i+0x16] = data[i+0x18]
+        out[i+0x17] = data[i+0x1C]
+        out[i+0x18] = data[i+0x01]
+        out[i+0x19] = data[i+0x05]
+        out[i+0x1A] = data[i+0x09]
+        out[i+0x1B] = data[i+0x0D]
+        out[i+0x1C] = data[i+0x11]
+        out[i+0x1D] = data[i+0x15]
+        out[i+0x1E] = data[i+0x19]
+        out[i+0x1F] = data[i+0x1D]
+    return out
+    
+def filter_niblo(data):
+    return bytearray((x & 0xF for x in data))
+        
+def filter_nibhi(data):
+    return bytearray((x >> 4 for x in data))
+    
+def filter_none(data):
+    return data
+        
+filters = { None: filter_none, "neogeo_sfix": filter_neogeo_sfix, "niblo": filter_niblo, "nibhi": filter_nibhi }
+        
 def getItemHelper(read, length, key):
     if isinstance(key, slice):
         start,stop,step = key.indices(length)
@@ -18,12 +66,12 @@ class FileChunk(object):
         if chunkFiles is None:
             chunkFiles = {}
         self.chunkFiles = chunkFiles
-        if inPath in chunkFiles:
-            size = chunkFiles[inPath][0]
-            self.fd = chunkFiles[inPath][1]
+        if (inPath,filter) in chunkFiles:
+            size = chunkFiles[inPath,filter][0]
+            self.fd = chunkFiles[inPath,filter][1]
         else:
             size,self.fd = FileChunk.openInPath(inPath, filter, cache)
-            chunkFiles[inPath] = (size, self.fd)
+            chunkFiles[inPath,filter] = (size, self.fd)
         if offset > size:
             self.offset = 0
             self.length = 0
@@ -38,7 +86,7 @@ class FileChunk(object):
         
     @classmethod
     def openInPath(cls, path, filter, cache):
-        apply = (lambda x : x) if filter is None else filter
+        apply = filters[filter]
         if not path.startswith("pipe:"):
             if path.startswith("file:"):
                 path = path[5:]
@@ -168,57 +216,12 @@ class ZipTemplate(object):
             data += self.ending[start:start+toCopy]
         return data
 
-def filter_neogeo_sfix(data):
-    out = bytearray(len(data)//32*32)
-    for i in range(0,len(out),32):
-        out[i+0x00] = data[i+0x02]
-        out[i+0x01] = data[i+0x06]
-        out[i+0x02] = data[i+0x0A]
-        out[i+0x03] = data[i+0x0E]
-        out[i+0x04] = data[i+0x12]
-        out[i+0x05] = data[i+0x16]
-        out[i+0x06] = data[i+0x1A]
-        out[i+0x07] = data[i+0x1E]
-        out[i+0x08] = data[i+0x03]
-        out[i+0x09] = data[i+0x07]
-        out[i+0x0A] = data[i+0x0B]
-        out[i+0x0B] = data[i+0x0F]
-        out[i+0x0C] = data[i+0x13]
-        out[i+0x0D] = data[i+0x17]
-        out[i+0x0E] = data[i+0x1B]
-        out[i+0x0F] = data[i+0x1F]
-        out[i+0x10] = data[i+0x00]
-        out[i+0x11] = data[i+0x04]
-        out[i+0x12] = data[i+0x08]
-        out[i+0x13] = data[i+0x0C]
-        out[i+0x14] = data[i+0x10]
-        out[i+0x15] = data[i+0x14]
-        out[i+0x16] = data[i+0x18]
-        out[i+0x17] = data[i+0x1C]
-        out[i+0x18] = data[i+0x01]
-        out[i+0x19] = data[i+0x05]
-        out[i+0x1A] = data[i+0x09]
-        out[i+0x1B] = data[i+0x0D]
-        out[i+0x1C] = data[i+0x11]
-        out[i+0x1D] = data[i+0x15]
-        out[i+0x1E] = data[i+0x19]
-        out[i+0x1F] = data[i+0x1D]
-    return out
-        
 def FileTemplate(desc,chunkFiles={}):
     outPath = desc["outPath"]
     
-    def getFilter(f):
-        if f is None:
-            return None
-        elif f == "neogeo_sfix":
-            return filter_neogeo_sfix
-        else:
-            assert(False)
-    
     def chunkArgs(data):
         return { "offset":data.get("offset",0), "spacing":data.get("spacing", 1), "length":data.get("length", None), 
-            "cache":data.get("cache", False), "filter":getFilter(data.get("filter", None)) }
+            "cache":data.get("cache", False), "filter":data.get("filter", None) }
 
     if "inPath" in desc:
         return FileChunk(desc["inPath"], outPath,  chunkFiles=chunkFiles, **chunkArgs(desc))
