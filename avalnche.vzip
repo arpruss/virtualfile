@@ -2,12 +2,12 @@
     {
         "outPath": "/avalnche.zip",
         "zip": [
-            { "outPath":"30612-01.d2", "inPath":"FOCAL_Emulator/Avalanche.bin", "filter":"nibhi", "length":0x800 },
-            { "outPath":"30615-01.d3", "inPath":"FOCAL_Emulator/Avalanche.bin", "filter":"niblo", "offset":0, "length":0x800 },
-            { "outPath":"30613-01.e2", "inPath":"FOCAL_Emulator/Avalanche.bin", "filter":"nibhi", "offset":0x800, "length":0x800 },
-            { "outPath":"30616-01.e3", "inPath":"FOCAL_Emulator/Avalanche.bin", "filter":"niblo", "offset":0x800, "length":0x800 },
-            { "outPath":"30611-01.c2", "inPath":"FOCAL_Emulator/Avalanche.bin", "filter":"nibhi", "offset":0x1000, "length":0x800 },
-            { "outPath":"30614-01.c3", "inPath":"FOCAL_Emulator/Avalanche.bin", "filter":"niblo", "offset":0x1000, "length":0x800 },
+            { "outPath":"30612.d2", "inPath":"FOCAL_Emulator/Avalanche.bin", "filter":"nibhi", "length":0x800 },
+            { "outPath":"30615.d3", "inPath":"FOCAL_Emulator/Avalanche.bin", "filter":"niblo", "offset":0, "length":0x800 },
+            { "outPath":"30613.e2", "inPath":"FOCAL_Emulator/Avalanche.bin", "filter":"nibhi", "offset":0x800, "length":0x800 },
+            { "outPath":"30616.e3", "inPath":"FOCAL_Emulator/Avalanche.bin", "filter":"niblo", "offset":0x800, "length":0x800 },
+            { "outPath":"30611.c2", "inPath":"FOCAL_Emulator/Avalanche.bin", "filter":"nibhi", "offset":0x1000, "length":0x800 },
+            { "outPath":"30614.c3", "inPath":"FOCAL_Emulator/Avalanche.bin", "filter":"niblo", "offset":0x1000, "length":0x800 },
         ]
         },
 )

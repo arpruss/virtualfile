@@ -4,7 +4,7 @@
         "zip": [
             { "outPath":"238-m1.m1", "inPath":"shocktro/shocktro_game_z80" },
             { "outPath":"238-p1.p1", "inPath":"shocktro/shocktro_game_m68k", "length":1048576 },
-            #{ "outPath":"238-pg1.p1", "inPath":"shocktro/shocktro_game_m68k", "length":1048576 },
+            { "outPath":"238-pg1.p1", "inPath":"shocktro/shocktro_game_m68k", "length":1048576 },
             #{ "outPath":"238-p2.p2", "inPath":"shocktro/shocktro_game_m68k", "offset":1048576 },
             { "outPath":"238-p2.sp2", "inPath":"shocktro/shocktro_game_m68k", "offset":1048576 },
             { "outPath":"238-v1.v1", "inPath":"shocktro/shocktro_adpcm", "length":4194304 },
