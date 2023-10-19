@@ -1,0 +1,19 @@
+
+
+(
+    {
+        "outPath": "/milliped.zip",
+        "zip": [
+            { "outPath":"milliped.104", "inPath":"FOCAL_Emulator/Millipede.bin", "length":0x1000 },
+            { "outPath":"milliped.103", "inPath":"FOCAL_Emulator/Millipede.bin", "offset":0x1000, "length":0x1000 },
+            { "outPath":"milliped.102", "inPath":"FOCAL_Emulator/Millipede.bin", "offset":0x2000, "length":0x1000 },
+            { "outPath":"milliped.101", "inPath":"FOCAL_Emulator/Millipede.bin", "offset":0x3000, "length":0x1000 },
+            { "outPath":"milliped.107", "inPath":"pipe:./frombmp milliped 0 FOCAL_Emulator/Millipede.bmp", "offset":0x0, "length":0x800 },
+            { "outPath":"milliped.106", "inPath":"pipe:./frombmp milliped 0 FOCAL_Emulator/Millipede.bmp", "offset":0x800, "length":0x800 },
+            { "outPath":"136013-107.5r", "inPath":"pipe:./frombmp milliped 0 FOCAL_Emulator/Millipede.bmp", "offset":0x0, "length":0x800 },
+            { "outPath":"136013-106.5p", "inPath":"pipe:./frombmp milliped 0 FOCAL_Emulator/Millipede.bmp", "offset":0x800, "length":0x800 },
+            { "outPath":"136001-213.7e", "inPath":"zero:0x100" },
+            
+        ]
+        },
+)

@@ -7,6 +7,7 @@ from collections import defaultdict
 from errno import ENOENT, ENODATA
 from stat import S_IFDIR, S_IFLNK, S_IFREG
 from time import time
+import os
 
 from fuse import FUSE, FuseOSError, Operations, LoggingMixIn
 
@@ -163,7 +164,8 @@ if __name__ == '__main__':
     parser.add_argument('datafile')
     args = parser.parse_args()
     try:
-        subprocess.call(["fusermount", "-u", args.mount],stderr=subprocess.DEVNULL)
+        if os.path.exists(args.mount):
+            subprocess.call(["fusermount", "-u", args.mount],stderr=subprocess.DEVNULL)
     except:
         pass
 

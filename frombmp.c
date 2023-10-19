@@ -137,8 +137,8 @@ static struct Layout centipede_spritelayout =
 struct rom_info chunks[] = {
     { "centiped", 0, 0, 4096, GFX_CENTIPED, &centipede_spritelayout,  8 },
     { "centiped", 0, 0, 4096, GFX_CENTIPED, &centipede_charlayout, 0 },
-    { "milliped", 0, 0, 4096, GFX_CENTIPED, &centipede_spritelayout,  },
-    { "milliped", 0, 0, 4096, GFX_CENTIPED, &centipede_charlayout,  },
+    { "milliped", 0, 0, 4096, GFX_MILLIPED, &centipede_spritelayout,  },
+    { "milliped", 0, 0, 4096, GFX_MILLIPED, &centipede_charlayout,  },
     { "ccastles", 0, 0, 16384, GFX_CCASTLES, &ccastles_spritelayout, 0 },
     { "warlords", 0, 0, 0x800, GFX_WARLORDS, &warlords_charlayout, 0 },
     { "warlords", 0, 0x200, 0x600, GFX_WARLORDS, &warlords_charlayout, 0 },
@@ -252,13 +252,13 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 						charNum = c;
 						//charNum %= 256;
 					}
-		        		v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
+                    v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
 				}
 				else {
 					unsigned charNum = 2*c;
 					if (charNum > 128)
 						charNum -= 127;
-		        		v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
+                    v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
 				}
 			}
 			//else if (mode == GFX_SPRINT_TILES) {
