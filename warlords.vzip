@@ -1,0 +1,15 @@
+(
+    {
+        "outPath": "/warlords.zip",
+        "zip": [
+            { "outPath":"037154.1m", "inPath":"FOCAL_Emulator/Warlords.bin", "length":0x800 },
+            { "outPath":"037153.1k", "inPath":"FOCAL_Emulator/Warlords.bin", "offset":0x800, "length":0x800 },
+            { "outPath":"037158.1j", "inPath":"FOCAL_Emulator/Warlords.bin", "offset":0x1000, "length":0x800 },
+            { "outPath":"037157.1h", "inPath":"FOCAL_Emulator/Warlords.bin", "offset":0x1800, "length":0x800 },
+            { "outPath":"037156.1e", "inPath":"FOCAL_Emulator/Warlords.bin", "offset":0x2000, "length":0x800 },
+            { "outPath":"037155.1d", "inPath":"FOCAL_Emulator/Warlords.bin", "offset":0x2800, "length":0x800 },
+            { "outPath":"037159.6e", "inPath":"pipe:./frombmp warlords 0 FOCAL_Emulator/Warlords.bmp", "offset":0x0, "length":0x800 },
+            { "outPath":"warlord.clr", "inPath":"warlord.clr" }
+        ]
+        },
+)

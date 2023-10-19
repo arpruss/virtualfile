@@ -3,6 +3,7 @@ import zlib
 import struct
 import io
 import subprocess
+import ast
 from datetime import datetime
 
 def filter_neogeo_sfix(data):
@@ -87,7 +88,16 @@ class FileChunk(object):
     @classmethod
     def openInPath(cls, path, filter, cache):
         apply = filters[filter]
-        if not path.startswith("pipe:"):
+        if path.startswith("pipe:"):
+            cmd = path[5:]
+            p = subprocess.Popen(cmd, shell=True, stdin=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdout=subprocess.PIPE, universal_newlines=False)
+            data = p.stdout.read()
+            #return len(data),io.BytesIO(apply(data))
+            return len(data),bytearray(apply(data))
+        elif path.startswith("zero:"):
+            n = ast.literal_eval(path[5:])
+            return n,bytearray(n)
+        else:
             if path.startswith("file:"):
                 path = path[5:]
             size = os.path.getsize(path)
@@ -98,12 +108,6 @@ class FileChunk(object):
                 fd.close()
                 return size,cached
             return size, fd
-        else:
-            cmd = path[5:]
-            p = subprocess.Popen(cmd, shell=True, stdin=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdout=subprocess.PIPE, universal_newlines=False)
-            data = p.stdout.read()
-            #return len(data),io.BytesIO(apply(data))
-            return len(data),bytearray(apply(data))
         
     def __len__(self):
         return self.length
