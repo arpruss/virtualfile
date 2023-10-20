@@ -14,5 +14,5 @@
             { "outPath":"241-c4.c4", "inPath":"pipe:./fixcrom mslug2/mslug2_tiles", "length":0x800000, "offset":0x1000001, "spacing":2 },
         ]
         },
-    #{ "outPath": "/neogeo.zip", "inPath":"neogeo.zip" },
+    { "outPath": "/neogeo.zip", "inPath":"neogeo.zip" },
 )

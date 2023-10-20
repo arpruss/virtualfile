@@ -5,22 +5,29 @@ echo mounting
 python3 memory.py mnt "$1.vzip" &
 pid=$!
 echo waiting
-until [ -f mnt/$1.zip ]
+until [ -f mnt/*.zip ]
 do
     sleep 1
 done
-echo ready
-ln -s mnt/$1.zip .
-#cp mnt/$1.zip .
-unzip -lv $1.zip
-#mame -rompath . $1
-d=`pwd`
-if [[ $d == *mame-* ]] ; then
-/home/pi/scripts/retroarch.sh "$1.zip" mame2003 mame-libretro
+echo mnt/*.zip
+fbneo=0
+for x in mnt/*.zip ; do
+   if [ "$x" == "mnt/neogeo.zip" ] ; then
+      echo neogeo detected
+      fbneo=1
+   else
+      zipfile=$(basename -a -s .zip "$x")
+   fi
+done
+echo ready to run $zipfile
+unzip -lv mnt/$zipfile.zip
+if [ $fbneo -eq 1 ] ; then
+    echo /home/pi/scripts/retroarch.sh "mnt/$zipfile.zip" fbneo neogeo
 else
-/home/pi/scripts/retroarch.sh "$1.zip" fbneo neogeo
-fi
+    echo /home/pi/scripts/retroarch.sh "mnt/$zipfile.zip" mame2003 mame-libretro
 #/home/pi/scripts/retroarch-mame.sh "$1.zip"
+fi
+echo killing mount
 kill $pid
-fusermount -u mnt
+( sleep 1 ; if [ -e mnt ] ; then fusermount -u mnt ; fi ) &
 

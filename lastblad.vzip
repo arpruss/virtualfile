@@ -18,5 +18,5 @@
             { "outPath":"234-c6.c6", "inPath":"pipe:./fixcrom lastblad/lastblad_tiles", "length":0x800000, "offset":0x2000001, "spacing":2 },
         ]
         },
-#    { "outPath": "/neogeo.zip", "inPath":"neogeo.zip" },
+    { "outPath": "/neogeo.zip", "inPath":"neogeo.zip" },
 )
