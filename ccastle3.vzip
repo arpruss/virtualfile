@@ -1,0 +1,29 @@
+
+(
+    {
+        "outPath": "/ccastle3.zip",
+        "zip": [
+            #{ "outPath":"136022-403.1k", "inPath":"FOCAL_Emulator/Crystal Castles.bin", "offset":0x4000, "length":0x2000 },
+            { "outPath":"022-403.bin", "inPath":"FOCAL_Emulator/Crystal Castles.bin", "offset":0x4000, "length":0x2000 },
+            #{ "outPath":"136022-404.1l", "inPath":"FOCAL_Emulator/Crystal Castles.bin", "offset":0x6000, "length":0x2000 },
+            { "outPath":"022-404.bin", "inPath":"FOCAL_Emulator/Crystal Castles.bin", "offset":0x6000, "length":0x2000 },
+            #{ "outPath":"136022-405.1n", "inPath":"FOCAL_Emulator/Crystal Castles.bin", "offset":0x8000, "length":0x2000 },
+            { "outPath":"022-405.bin", "inPath":"FOCAL_Emulator/Crystal Castles.bin", "offset":0x8000, "length":0x2000 },
+            
+            #{ "outPath":"136022-102.1h", "inPath":"FOCAL_Emulator/Crystal Castles.bin", "offset":0, "length":0x2000 },
+            { "outPath":"ccastles.102", "inPath":"FOCAL_Emulator/Crystal Castles.bin", "offset":0, "length":0x2000 },
+            #{ "outPath":"136022-101.1f", "inPath":"FOCAL_Emulator/Crystal Castles.bin", "offset":0x2000, "length":0x2000 },
+            { "outPath":"ccastles.101", "inPath":"FOCAL_Emulator/Crystal Castles.bin", "offset":0x2000, "length":0x2000 },
+
+            { "outPath":"ccastles.106", "inPath":"pipe:./frombmp ccastles 0 'FOCAL_Emulator/Crystal Castles.bmp'", "offset":0, "length":8192 },
+            #{ "outPath":"136022-106.8d", "inPath":"pipe:./frombmp ccastles 0 'FOCAL_Emulator/Crystal Castles.bmp'", "offset":0, "length":8192 },
+            { "outPath":"ccastles.107", "inPath":"pipe:./frombmp ccastles 0 'FOCAL_Emulator/Crystal Castles.bmp'", "offset":8192, "length":8192 },
+            #{ "outPath":"136022-107.8b", "inPath":"pipe:./frombmp ccastles 0 'FOCAL_Emulator/Crystal Castles.bmp'", "offset":8192, "length":8192 },
+            
+            #{ "outPath":"82s129-136022-108.7k", "inPath":"zero:0x100" },
+            #{ "outPath":"82s129-136022-109.6l", "inPath":"zero:0x100" },
+            #{ "outPath":"82s129-136022-110.11l", "inPath":"zero:0x100" },
+            #{ "outPath":"82s129-136022-111.10k", "inPath":"zero:0x100" },
+            ]
+        },
+)
