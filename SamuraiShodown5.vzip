@@ -1,0 +1,22 @@
+(
+    {
+        "outPath": "/samsh5sp.zip",
+        "zip": [
+            { "outPath":"272-m1.m1", "inPath":"samsh5sp/m1.bin" },
+            { "outPath":"272-p1.p1", "inPath":"samsh5sp/p1.bin", "length":4194304 },
+            { "outPath":"272-p2.sp2", "inPath":"samsh5sp/p1.bin", "offset":4194304 },
+            { "outPath":"272-v1.v1", "inPath":"samsh5sp/v1.bin", "length":0x800000 },
+            { "outPath":"272-v2.v2", "inPath":"samsh5sp/v1.bin", "offset":0x800000 },
+            { "outPath":"272-s1.s1", "inPath":"samsh5sp/s1.bin", }, #"filter":"neogeo_sfix" },
+            { "outPath":"272-c1.c1", "inPath":"pipe:./fixcrom samsh5sp/c1.bin", "length":0x800000, "offset":0, "spacing":2 },
+            { "outPath":"272-c2.c2", "inPath":"pipe:./fixcrom samsh5sp/c1.bin", "length":0x800000, "offset":1, "spacing":2 },
+            { "outPath":"272-c3.c3", "inPath":"pipe:./fixcrom samsh5sp/c1.bin", "length":0x800000, "offset":0x1000000, "spacing":2 },
+            { "outPath":"272-c4.c4", "inPath":"pipe:./fixcrom samsh5sp/c1.bin", "length":0x800000, "offset":0x1000001, "spacing":2 },
+            { "outPath":"272-c5.c5", "inPath":"pipe:./fixcrom samsh5sp/c1.bin", "length":0x800000, "offset":0x2000000, "spacing":2 },
+            { "outPath":"272-c6.c6", "inPath":"pipe:./fixcrom samsh5sp/c1.bin", "length":0x800000, "offset":0x2000001, "spacing":2 },
+            { "outPath":"272-c7.c7", "inPath":"pipe:./fixcrom samsh5sp/c1.bin", "length":0x800000, "offset":0x3000000, "spacing":2 },
+            { "outPath":"272-c8.c8", "inPath":"pipe:./fixcrom samsh5sp/c1.bin", "length":0x800000, "offset":0x3000001, "spacing":2 },
+        ]
+        },
+    { "outPath": "/neogeo.zip", "inPath":"neogeo.zip" },
+)
