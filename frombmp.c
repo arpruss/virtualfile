@@ -42,6 +42,7 @@ struct rom_info
 #define GFX_SPRINT_SPRITES   4
 #define GFX_SPRINT_TILES     5
 #define GFX_WARLORDS     6
+#define GFX_SKYDIVER     7
 
 static struct Layout sprint_tile_layout =
 {
@@ -122,6 +123,31 @@ static struct Layout centipede_spritelayout =
 	16*8
 };
 
+static struct Layout skydiver_charlayout =
+{
+    8,8,
+    64,
+    1,
+    { 0 },
+    { 7, 6, 5, 4, 15, 14, 13, 12 },
+    { 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16 },
+    8*16
+};
+
+
+static struct Layout skydiver_motionlayout =
+{
+    16,16,
+    32,
+    1,
+    { 0 },
+    { 4, 5, 6, 7, 4 + 0x400*8, 5 + 0x400*8, 6 + 0x400*8, 7 + 0x400*8,
+      12, 13, 14, 15, 12 + 0x400*8, 13 + 0x400*8, 14 + 0x400*8, 15 + 0x400*8 },
+    { 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16,
+      8*16, 9*16, 10*16, 11*16, 12*16, 13*16, 14*16, 15*16 },
+    8*32
+};
+
 
 /*
     char* game;
@@ -142,6 +168,10 @@ struct rom_info chunks[] = {
     { "ccastles", 0, 0, 16384, GFX_CCASTLES, &ccastles_spritelayout, 0 },
     { "warlords", 0, 0, 0x800, GFX_WARLORDS, &warlords_charlayout, 0 },
     { "warlords", 0, 0x200, 0x600, GFX_WARLORDS, &warlords_charlayout, 0 },
+    { "skydiver", 0, 0, 0x400, GFX_SKYDIVER, &skydiver_charlayout, 0 },
+    { "skydiver", 1, 0, 0x800, GFX_SKYDIVER, &skydiver_motionlayout, 0 },
+            
+            
     { NULL }
 };
 
@@ -272,6 +302,11 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
                     int delta = start>0 ? (-1536-512) : 0;
                     v = get_from_bmp(bmp, bmpX+x, (bmpY+width*c+y+delta+4096)%4096);
             }
+			else if (mode == GFX_SKYDIVER) {
+		        	v = get_from_bmp(bmp, bmpX+x, bmpY+width*c+y);
+                    //v = v ? 1 : 0;
+		        	//v = get_from_bmp(bmp, bmpX+y, bmpY+height*c+x);
+			}
 			else {
 		        	v = get_from_bmp(bmp, bmpX+x, bmpY+width*c+y);
 		        	//v = get_from_bmp(bmp, bmpX+y, bmpY+height*c+x);
@@ -285,9 +320,9 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 				}
 
 				if (v&(1<<plane)) 
-					base[pos/8] |= (1<<(pos%8));
+					base[pos/8] |= (1<<(7-pos%8));
 				else
-					base[pos/8] &= ~(1<<(pos%8));
+					base[pos/8] &= ~(1<<(7-pos%8));
 				
 			}
 		}
