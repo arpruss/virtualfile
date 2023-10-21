@@ -36,6 +36,7 @@ struct rom_info
     unsigned bmpY;
 };
 
+#define GFX_CENTIPED_REV 0
 #define GFX_CENTIPED 1
 #define GFX_CCASTLES 2
 #define GFX_MILLIPED 3
@@ -67,8 +68,10 @@ static struct Layout sprint_car_layout =
 	1,
 	{ 0 },
 	{
+        
+        
 		0x7, 0x6, 0x5, 0x4, 0x3, 0x2, 0x1, 0x0,
-		0xf, 0xe, 0xd, 0xc, 0xb, 0xa, 0x9, 0x8
+		0xf, 0xe, 0xd, 0xc, 0xb, 0xa, 0x9, 0x8,//rev
 	},
 	{
 		0x00, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70
@@ -163,6 +166,8 @@ static struct Layout skydiver_motionlayout =
 struct rom_info chunks[] = {
     { "centiped", 0, 0, 4096, GFX_CENTIPED, &centipede_spritelayout,  8 },
     { "centiped", 0, 0, 4096, GFX_CENTIPED, &centipede_charlayout, 0 },
+    { "centipedrev", 0, 0, 4096, GFX_CENTIPED_REV, &centipede_spritelayout,  8 },
+    { "centipedrev", 0, 0, 4096, GFX_CENTIPED_REV, &centipede_charlayout, 0 },
     { "milliped", 0, 0, 4096, GFX_MILLIPED, &centipede_spritelayout,  },
     { "milliped", 0, 0, 4096, GFX_MILLIPED, &centipede_charlayout,  },
     { "ccastles", 0, 0, 16384, GFX_CCASTLES, &ccastles_spritelayout, 0 },
@@ -170,8 +175,8 @@ struct rom_info chunks[] = {
     { "warlords", 0, 0x200, 0x600, GFX_WARLORDS, &warlords_charlayout, 0 },
     { "skydiver", 0, 0, 0x400, GFX_SKYDIVER, &skydiver_charlayout, 0 },
     { "skydiver", 1, 0, 0x800, GFX_SKYDIVER, &skydiver_motionlayout, 0 },
-            
-            
+    { "sprint2", 0, 0, 0x400, GFX_SPRINT_TILES, &sprint_tile_layout, 0 },
+    { "sprint2", 1, 0, 0x400, GFX_SPRINT_SPRITES, &sprint_car_layout, 0 },
     { NULL }
 };
 
@@ -239,7 +244,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 	unsigned c;
 	unsigned end;
 
-	if (mode == GFX_CENTIPED) {
+	if (mode == GFX_CENTIPED | mode == GFX_CENTIPED_REV) {
 		c = width == height ? 64 : 0;
 		end = 128;
 	}
@@ -251,6 +256,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 		c = 0;
 		end = total;
 	}
+    fprintf(stderr,"mode:%d total:%d width:%d height:%d\n", mode, total, width, height);
 
 	for (;c<end;c++) {
 		for(int x=0;x<width;x++) for(int y=0;y<height;y++) {
@@ -259,6 +265,18 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 				if (width==height) {
 					unsigned charNum = c;
                     v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+width-1-x);
+				}
+				else {
+					unsigned charNum = 2*c;
+					if (charNum > 128)
+						charNum -= 127;
+                    v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
+				}
+			}
+			else if (mode == GFX_CENTIPED_REV) {
+				if (width==height) {
+					unsigned charNum = c;
+                    v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
 				}
 				else {
 					unsigned charNum = 2*c;
@@ -303,13 +321,12 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
                     v = get_from_bmp(bmp, bmpX+x, (bmpY+width*c+y+delta+4096)%4096);
             }
 			else if (mode == GFX_SKYDIVER) {
-		        	v = get_from_bmp(bmp, bmpX+x, bmpY+width*c+y);
+		        	v = get_from_bmp(bmp, bmpX+x, bmpY+width*c+y); // height?
                     //v = v ? 1 : 0;
 		        	//v = get_from_bmp(bmp, bmpX+y, bmpY+height*c+x);
 			}
 			else {
-		        	v = get_from_bmp(bmp, bmpX+x, bmpY+width*c+y);
-		        	//v = get_from_bmp(bmp, bmpX+y, bmpY+height*c+x);
+		        	v = get_from_bmp(bmp, bmpX+x, bmpY+height*c+y);
 			}
 
 

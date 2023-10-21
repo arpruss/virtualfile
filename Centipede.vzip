@@ -10,8 +10,8 @@
             { "outPath":"centiped.211", "inPath":"pipe:./frombmp centiped 0 FOCAL_Emulator/Centipede.bmp", "offset":0x0, "length":0x800 },
             { "outPath":"centiped.212", "inPath":"pipe:./frombmp centiped 0 FOCAL_Emulator/Centipede.bmp", "offset":0x800, "length":0x800 },
             { "outPath":"centiped.213", "inPath":"zero:0x100" },
-            { "outPath":"136001-211.f7", "inPath":"pipe:./frombmp centiped 0 FOCAL_Emulator/Centipede.bmp", "offset":0x0, "length":0x800 },
-            { "outPath":"136001-212.hj7", "inPath":"pipe:./frombmp centiped 0 FOCAL_Emulator/Centipede.bmp", "offset":0x800, "length":0x800 },
+            { "outPath":"136001-211.f7", "inPath":"pipe:./frombmp centipedrev 0 FOCAL_Emulator/Centipede.bmp", "offset":0x0, "length":0x800 },
+            { "outPath":"136001-212.hj7", "inPath":"pipe:./frombmp centipedrev 0 FOCAL_Emulator/Centipede.bmp", "offset":0x800, "length":0x800 },
             { "outPath":"136001-213.p4", "inPath":"zero:0x100" },
         ]
         },
