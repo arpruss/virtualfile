@@ -36,7 +36,6 @@ struct rom_info
     unsigned bmpY;
 };
 
-#define GFX_CENTIPED_REV 0
 #define GFX_CENTIPED 1
 #define GFX_CCASTLES 2
 #define GFX_MILLIPED 3
@@ -166,8 +165,6 @@ static struct Layout skydiver_motionlayout =
 struct rom_info chunks[] = {
     { "centiped", 0, 0, 4096, GFX_CENTIPED, &centipede_spritelayout,  8 },
     { "centiped", 0, 0, 4096, GFX_CENTIPED, &centipede_charlayout, 0 },
-    { "centipedrev", 0, 0, 4096, GFX_CENTIPED_REV, &centipede_spritelayout,  8 },
-    { "centipedrev", 0, 0, 4096, GFX_CENTIPED_REV, &centipede_charlayout, 0 },
     { "milliped", 0, 0, 4096, GFX_MILLIPED, &centipede_spritelayout,  },
     { "milliped", 0, 0, 4096, GFX_MILLIPED, &centipede_charlayout,  },
     { "ccastles", 0, 0, 16384, GFX_CCASTLES, &ccastles_spritelayout, 0 },
@@ -243,8 +240,9 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 
 	unsigned c;
 	unsigned end;
+    int rev = 0;
 
-	if (mode == GFX_CENTIPED | mode == GFX_CENTIPED_REV) {
+	if (mode == GFX_CENTIPED) {
 		c = width == height ? 64 : 0;
 		end = 128;
 	}
@@ -256,6 +254,10 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 		c = 0;
 		end = total;
 	}
+    
+    if (mode == GFX_SKYDIVER)
+        rev = 1;
+    
     fprintf(stderr,"mode:%d total:%d width:%d height:%d\n", mode, total, width, height);
 
 	for (;c<end;c++) {
@@ -265,18 +267,6 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 				if (width==height) {
 					unsigned charNum = c;
                     v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+width-1-x);
-				}
-				else {
-					unsigned charNum = 2*c;
-					if (charNum > 128)
-						charNum -= 127;
-                    v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
-				}
-			}
-			else if (mode == GFX_CENTIPED_REV) {
-				if (width==height) {
-					unsigned charNum = c;
-                    v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
 				}
 				else {
 					unsigned charNum = 2*c;
@@ -337,9 +327,9 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 				}
 
 				if (v&(1<<plane)) 
-					base[pos/8] |= (1<<(7-pos%8));
+					base[pos/8] |= (1<<(rev ? 7-pos%8 : pos%8));
 				else
-					base[pos/8] &= ~(1<<(7-pos%8));
+					base[pos/8] &= ~(1<<(rev ? 7-pos%8 : pos%8));
 				
 			}
 		}
