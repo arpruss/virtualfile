@@ -1,0 +1,17 @@
+(
+    {
+        "outPath": "/montecar.zip",
+        "zip": [
+            { "outPath":"35766-01.h1", "inPath":"FOCAL_Emulator/MonteCarlo.bin", "length":0x800 },
+            { "outPath":"35765-01.f1", "inPath":"FOCAL_Emulator/MonteCarlo.bin", "length":0x800, "offset":0x800 },
+            { "outPath":"35764-01.d1", "inPath":"FOCAL_Emulator/MonteCarlo.bin", "length":0x800, "offset":0x1000 },
+            { "outPath":"35763-01.c1", "inPath":"FOCAL_Emulator/MonteCarlo.bin", "length":0x800, "offset":0x1800 },
+            { "outPath":"35785-01.e7", "inPath":"FOCAL_Emulator/MonteCarloColors.bin" },
+            { "outPath":"9114.prm", "inPath":"zero:256" },
+            { "outPath":"35778-01.m4", "inPath":"pipe:./frombmp montecar 0 FOCAL_Emulator/MonteCarloTiles1.bmp" }, #text
+            { "outPath":"35775-01.e6", "inPath":"pipe:./frombmp montecar 1 FOCAL_Emulator/MonteCarloTiles2.bmp" }, #tiles
+            { "outPath":"35779-01.m6", "inPath":"pipe:./frombmp montecar 2 FOCAL_Emulator/MonteCarloSprites1.bmp" }, #car
+            { "outPath":"35780-01.b6", "inPath":"pipe:./frombmp montecar 3 FOCAL_Emulator/MonteCarloSprites2.bmp" }, #drone
+        ]
+        },
+)

@@ -39,10 +39,66 @@ struct rom_info
 #define GFX_CENTIPED 1
 #define GFX_CCASTLES 2
 #define GFX_MILLIPED 3
-#define GFX_SPRINT_SPRITES   4
-#define GFX_SPRINT_TILES     5
+#define GFX_SPRINT   4
 #define GFX_WARLORDS     6
 #define GFX_SKYDIVER     7
+#define GFX_MONTECAR_TEXT 8
+#define GFX_MONTECAR_CAR 9
+#define GFX_MONTECAR_TILE 10
+
+
+static struct Layout montecar_text_layout =
+{
+    8, 8,   
+    64,     
+    1,      
+    { 0 },  
+    {
+        0xC, 0xD, 0xE, 0xF, 0x4, 0x5, 0x6, 0x7
+    },
+    {
+        0x00, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70
+    },
+    0x80
+};
+
+static struct Layout montecar_car_layout =
+{
+    32, 32, 
+    8,      
+    2,      
+    { 1, 0 },
+    {
+        0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E,
+        0x10, 0x12, 0x14, 0x16, 0x18, 0x1A, 0x1C, 0x1E,
+        0x20, 0x22, 0x24, 0x26, 0x28, 0x2A, 0x2C, 0x2E,
+        0x30, 0x32, 0x34, 0x36, 0x38, 0x3A, 0x3C, 0x3E
+    },
+    {
+        0x000, 0x040, 0x080, 0x0C0, 0x100, 0x140, 0x180, 0x1C0,
+        0x200, 0x240, 0x280, 0x2C0, 0x300, 0x340, 0x380, 0x3C0,
+        0x400, 0x440, 0x480, 0x4C0, 0x500, 0x540, 0x580, 0x5C0,
+        0x600, 0x640, 0x680, 0x6C0, 0x700, 0x740, 0x780, 0x7C0
+    },
+    0x800
+};
+
+static struct Layout firetrk_tile_layout =
+{
+    16, 16,
+    64,   
+    1,    
+    { 0 },
+    {
+        0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
+        0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF
+    },
+    {
+        0x00, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70,
+        0x80, 0x90, 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xF0
+    },
+    0x100
+};
 
 static struct Layout sprint_tile_layout =
 {
@@ -170,8 +226,14 @@ struct rom_info chunks[] = {
     { "warlords", 0, 0x200, 0x600, GFX_WARLORDS, &warlords_charlayout, 0 },
     { "skydiver", 0, 0, 0x400, GFX_SKYDIVER, &skydiver_charlayout, 0 },
     { "skydiver", 1, 0, 0x800, GFX_SKYDIVER, &skydiver_motionlayout, 0 },
-    { "sprint2", 0, 0, 0x400, GFX_SPRINT_TILES, &sprint_tile_layout, 0 },
-    { "sprint2", 1, 0, 0x400, GFX_SPRINT_SPRITES, &sprint_car_layout, 0 },
+    { "sprint2", 0, 0, 0x400, GFX_SPRINT, &sprint_tile_layout, 0 },
+    { "sprint2", 1, 0, 0x400, GFX_SPRINT, &sprint_car_layout, 0 },
+    
+    { "montecar", 0, 0, 0x400, GFX_MONTECAR_TEXT, &montecar_text_layout, 0 },
+    { "montecar", 1, 0, 0x800, GFX_MONTECAR_TILE, &firetrk_tile_layout, 0 },
+    { "montecar", 2, 0, 0x800, GFX_MONTECAR_CAR, &montecar_car_layout, 0 },
+    { "montecar", 3, 0, 0x800, GFX_MONTECAR_CAR, &montecar_car_layout, 0 },
+    
     { NULL }
 };
 
@@ -253,7 +315,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 		end = total;
 	}
     
-    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT_SPRITES) 
+    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT || mode == GFX_MONTECAR_TILE) 
         rev = 1;
     
     fprintf(stderr,"mode:%d total:%d width:%d height:%d size:%d\n", mode, total, width, height, regionSize);
@@ -297,9 +359,6 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
                     v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
 				}
 			}
-			else if (mode == GFX_SPRINT_TILES) {
-		        	v = get_from_bmp(bmp, bmpX+(7-x), bmpY+height*c+y);
-			}
 			else if (mode == GFX_CCASTLES) {
 		        	v = 0x7^(0x7&get_from_bmp(bmp, bmpX+7-(x+4)%8, height*c+bmpY+y)); //ARP
 			}
@@ -307,6 +366,9 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
                     int delta = start>0 ? (-1536-512) : 0;
                     v = get_from_bmp(bmp, bmpX+x, (bmpY+height*c+y+delta+4096)%4096);
             }
+			else if (mode == GFX_MONTECAR_TEXT || mode == GFX_MONTECAR_TILE || mode == GFX_MONTECAR_CAR) {
+		        	v = get_from_bmp(bmp, bmpX+y, bmpY+width*c+(height-1-x));
+			}
 			else {
 		        	v = get_from_bmp(bmp, bmpX+x, bmpY+height*c+y);
 			}
@@ -394,10 +456,10 @@ struct fake_whole sprint2 = {
 		{"6405.e1"},
 		{"6400-01.m2", 256, "zero"},
 		{"6401-01.e2", 32, "zero"},
-		{"6396-01.p4", 512, "Sprint2Tiles.bmp", 0, 512, sprint_tile_DecodeInfo, GFX_SPRINT_TILES},
-		{"6397-01.r4", 512, "Sprint2Tiles.bmp", 512, 512, sprint_tile_DecodeInfo, GFX_SPRINT_TILES},
-		{"6399-01.j6", 512, "Sprint2Sprites.bmp", 0, 512, sprint_car_DecodeInfo, GFX_SPRINT_SPRITES},
-		{"6398-01.k6", 512, "Sprint2Sprites.bmp", 512, 512, sprint_car_DecodeInfo, GFX_SPRINT_SPRITES},
+		{"6396-01.p4", 512, "Sprint2Tiles.bmp", 0, 512, sprint_tile_DecodeInfo, GFX_SPRINT},
+		{"6397-01.r4", 512, "Sprint2Tiles.bmp", 512, 512, sprint_tile_DecodeInfo, GFX_SPRINT},
+		{"6399-01.j6", 512, "Sprint2Sprites.bmp", 0, 512, sprint_car_DecodeInfo, GFX_SPRINT},
+		{"6398-01.k6", 512, "Sprint2Sprites.bmp", 512, 512, sprint_car_DecodeInfo, GFX_SPRINT},
 		{NULL},
 	}
 };
@@ -611,7 +673,7 @@ void encode_chunk(uint8_t* buf, unsigned size, uint8_t* bmp, struct rom_info* ch
 
     encode_layout(buf, bmp, rlen, chunk->layout, chunk->start, chunk->bmpX, chunk->bmpY, chunk->mode);
     
-	if (chunk->mode == GFX_SPRINT_TILES || chunk->mode == GFX_SPRINT_SPRITES) {
+	if (chunk->mode == GFX_SPRINT || chunk->mode == GFX_SPRINT) {
 		for (unsigned i = 0 ; i < 512 ; i++) {
 			buf[512+i] = buf[i] & 0xF;
 			buf[i] >>= 4;        
