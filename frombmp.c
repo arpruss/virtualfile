@@ -36,7 +36,7 @@ struct rom_info
     unsigned bmpY;
 };
 
-#define GFX_DEFAULT 0
+#define GFX_SBRKOUT 0
 #define GFX_CENTIPED 1
 #define GFX_CCASTLES 2
 #define GFX_MILLIPED 3
@@ -256,8 +256,8 @@ struct rom_info chunks[] = {
     { "montecar", 2, 0, 0x800, GFX_MONTECAR, &montecar_car_layout, 0 },
     { "montecar", 3, 0, 0x800, GFX_MONTECAR, &montecar_car_layout, 0 },
     
-    { "sbrkout", 0, 0, 0x400, GFX_DEFAULT, &sbrkout_charlayout, 0 },
-    { "sbrkout", 1, 0, 0x20, GFX_DEFAULT, &sbrkout_balllayout, 0 },
+    { "sbrkout", 0, 0, 0x400, GFX_SBRKOUT, &sbrkout_charlayout, 0 },
+    { "sbrkout", 1, 0, 0x20, GFX_SBRKOUT, &sbrkout_balllayout, 0 },
 
     { NULL }
 };
@@ -340,7 +340,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 		end = total;
 	}
     
-    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT || mode == GFX_MONTECAR) 
+    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT || mode == GFX_MONTECAR || mode==GFX_SBRKOUT) 
         rev = 1;
     
     fprintf(stderr,"mode:%d total:%d width:%d height:%d size:%d\n", mode, total, width, height, regionSize);
@@ -391,7 +391,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
                     int delta = start>0 ? (-1536-512) : 0;
                     v = get_from_bmp(bmp, bmpX+x, (bmpY+height*c+y+delta+4096)%4096);
             }
-			else if (mode == GFX_MONTECAR) {
+			else if (mode == GFX_MONTECAR || mode == GFX_SBRKOUT) {
 		        	v = get_from_bmp(bmp, bmpX+y, bmpY+width*c+(height-1-x));
 			}
 			else {
