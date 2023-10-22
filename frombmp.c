@@ -67,10 +67,8 @@ static struct Layout sprint_car_layout =
 	1,
 	{ 0 },
 	{
-        
-        
 		0x7, 0x6, 0x5, 0x4, 0x3, 0x2, 0x1, 0x0,
-		0xf, 0xe, 0xd, 0xc, 0xb, 0xa, 0x9, 0x8,//rev
+		0xf, 0xe, 0xd, 0xc, 0xb, 0xa, 0x9, 0x8,
 	},
 	{
 		0x00, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70
@@ -255,10 +253,10 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 		end = total;
 	}
     
-    if (mode == GFX_SKYDIVER)
+    if (mode == GFX_SKYDIVER) // || mode == GFX_SPRINT_SPRITES) 
         rev = 1;
     
-    fprintf(stderr,"mode:%d total:%d width:%d height:%d\n", mode, total, width, height);
+    fprintf(stderr,"mode:%d total:%d width:%d height:%d size:%d\n", mode, total, width, height, regionSize);
 
 	for (;c<end;c++) {
 		for(int x=0;x<width;x++) for(int y=0;y<height;y++) {
@@ -299,12 +297,11 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
                     v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
 				}
 			}
-			//else if (mode == GFX_SPRINT_TILES) {
-		        	//v = get_from_bmp(bmp, bmpX+y, bmpY+height*c+x);
-			//}
+			else if (mode == GFX_SPRINT_TILES) {
+		        	v = get_from_bmp(bmp, bmpX+(7-x), bmpY+height*c+y);
+			}
 			else if (mode == GFX_CCASTLES) {
 		        	v = 0x7^(0x7&get_from_bmp(bmp, bmpX+7-(x+4)%8, height*c+bmpY+y)); //ARP
-                    //if (v == 0xf) v = 7;
 			}
             else if (mode == GFX_WARLORDS) {
                     int delta = start>0 ? (-1536-512) : 0;
@@ -315,22 +312,26 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
                     //v = v ? 1 : 0;
 		        	//v = get_from_bmp(bmp, bmpX+y, bmpY+height*c+x);
 			}
+			else if (mode == GFX_SPRINT_SPRITES) {
+		        	v = get_from_bmp(bmp, bmpX+x, bmpY+height*c+y);
+//                    rev = 1;
+			}
 			else {
 		        	v = get_from_bmp(bmp, bmpX+x, bmpY+height*c+y);
 			}
 
 
+            
 			for (int plane=0;plane<layout->planes;plane++) {
 				unsigned pos = layout->planeoffset[plane]+layout->xoffset[x]+layout->yoffset[y]+layout->charincrement*(c%total);
-				if(pos/8+start>=regionSize) {
+                                
+                if(pos/8+start>=regionSize) 
 					continue;
-				}
 
 				if (v&(1<<plane)) 
-					base[pos/8] |= (1<<(rev ? 7-pos%8 : pos%8));
+					base[pos/8] |=  (1<<(rev ? 7-pos%8 : pos%8));
 				else
 					base[pos/8] &= ~(1<<(rev ? 7-pos%8 : pos%8));
-				
 			}
 		}
 	}
