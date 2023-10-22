@@ -42,9 +42,7 @@ struct rom_info
 #define GFX_SPRINT   4
 #define GFX_WARLORDS     6
 #define GFX_SKYDIVER     7
-#define GFX_MONTECAR_TEXT 8
-#define GFX_MONTECAR_CAR 9
-#define GFX_MONTECAR_TILE 10
+#define GFX_MONTECAR 8
 
 
 static struct Layout montecar_text_layout =
@@ -229,10 +227,10 @@ struct rom_info chunks[] = {
     { "sprint2", 0, 0, 0x400, GFX_SPRINT, &sprint_tile_layout, 0 },
     { "sprint2", 1, 0, 0x400, GFX_SPRINT, &sprint_car_layout, 0 },
     
-    { "montecar", 0, 0, 0x400, GFX_MONTECAR_TEXT, &montecar_text_layout, 0 },
-    { "montecar", 1, 0, 0x800, GFX_MONTECAR_TILE, &firetrk_tile_layout, 0 },
-    { "montecar", 2, 0, 0x800, GFX_MONTECAR_CAR, &montecar_car_layout, 0 },
-    { "montecar", 3, 0, 0x800, GFX_MONTECAR_CAR, &montecar_car_layout, 0 },
+    { "montecar", 0, 0, 0x400, GFX_MONTECAR, &montecar_text_layout, 0 },
+    { "montecar", 1, 0, 0x800, GFX_MONTECAR, &firetrk_tile_layout, 0 },
+    { "montecar", 2, 0, 0x800, GFX_MONTECAR, &montecar_car_layout, 0 },
+    { "montecar", 3, 0, 0x800, GFX_MONTECAR, &montecar_car_layout, 0 },
     
     { NULL }
 };
@@ -315,7 +313,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 		end = total;
 	}
     
-    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT || mode == GFX_MONTECAR_TILE) 
+    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT || mode == GFX_MONTECAR) 
         rev = 1;
     
     fprintf(stderr,"mode:%d total:%d width:%d height:%d size:%d\n", mode, total, width, height, regionSize);
@@ -366,7 +364,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
                     int delta = start>0 ? (-1536-512) : 0;
                     v = get_from_bmp(bmp, bmpX+x, (bmpY+height*c+y+delta+4096)%4096);
             }
-			else if (mode == GFX_MONTECAR_TEXT || mode == GFX_MONTECAR_TILE || mode == GFX_MONTECAR_CAR) {
+			else if (mode == GFX_MONTECAR) {
 		        	v = get_from_bmp(bmp, bmpX+y, bmpY+width*c+(height-1-x));
 			}
 			else {
