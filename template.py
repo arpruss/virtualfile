@@ -63,7 +63,7 @@ def getItemHelper(read, length, key):
         return read(key, 1)[0]
 
 class FileChunk(object):
-    def __init__(self, inPath, outPath, offset=0, spacing=1, length=None, cache=False, filter=None, chunkFiles=None):
+    def __init__(self, inPath, outPath=None, offset=0, spacing=1, length=None, cache=False, filter=None, chunkFiles=None):
         if chunkFiles is None:
             chunkFiles = {}
         self.chunkFiles = chunkFiles
@@ -84,6 +84,12 @@ class FileChunk(object):
             self.offset = offset
         self.spacing = spacing
         self.outPath = outPath
+        
+        now = datetime.now() ## TODO: fix timezone
+        self.date = (now.date().day) | (now.date().month << 5) | ((now.date().year-1980)<<9)
+        self.time = (now.time().second//2) | (now.time().minute<<5) | (now.time().hour<<11)
+        self.zipShortHeader = b''
+        self.zipChunkLength = self.length
         
     @classmethod
     def openInPath(cls, path, filter, cache):
@@ -141,15 +147,16 @@ class FileChunk(object):
                 except:
                     pass
             self.chunkFiles.clear()
+            
+    def zipLongHeader(self,zipPos):
+        return b''
 
 class ZipChunk(FileChunk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         self.crc32 = zlib.crc32(self.read(0, self.length))
         p = bytes(self.outPath, 'ascii')
-        now = datetime.now() ## TODO: fix timezone
-        self.date = (now.date().day) | (now.date().month << 5) | ((now.date().year-1980)<<9)
-        self.time = (now.time().second//2) | (now.time().minute<<5) | (now.time().hour<<11)
         self.zipShortHeader = struct.pack("<IHHHHHIIIHH",#"<I<H<H<H<H<H<I<I<I<H<H",
             0x04034b50,0x14,0,0,self.time,self.date,self.crc32,self.length,self.length,len(p),0)+p
         self.zipChunkLength = len(self.zipShortHeader) + self.length
@@ -157,7 +164,7 @@ class ZipChunk(FileChunk):
     def zipLongHeader(self,zipPos):
         p = bytes(self.outPath, 'ascii')
         return struct.pack("<IHHHHHHIIIHHHHHII",
-            0x02014b50,0x14,0x14,0,0,self.time,self.date,self.crc32,self.length,self.length,len(p),0,0,0,0,0,zipPos)+p
+            0x02014b50,0x14,0x14,0,0,self.time,self.date,self.crc32,self.length,self.length,len(p),0,0,0,0,0,zipPos)+p                        
                             
 class ZipTemplate(object):
     def __init__(self, outPath, chunks):
@@ -219,6 +226,11 @@ class ZipTemplate(object):
             assert start >= 0
             data += self.ending[start:start+toCopy]
         return data
+        
+class SegmentedFileTemplate(ZipTemplate):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)        
+        self.ending = b''
 
 def FileTemplate(desc,chunkFiles={}):
     outPath = desc["outPath"]
@@ -229,6 +241,8 @@ def FileTemplate(desc,chunkFiles={}):
 
     if "inPath" in desc:
         return FileChunk(desc["inPath"], outPath,  chunkFiles=chunkFiles, **chunkArgs(desc))
+    elif "segmented" in desc:
+        return SegmentedFileTemplate(outPath, tuple(FileChunk(c["inPath"], chunkFiles=chunkFiles, **chunkArgs(c)) for c in desc["segmented"] ))
     else:
         return ZipTemplate(outPath, tuple(ZipChunk(c["inPath"], c["outPath"], chunkFiles=chunkFiles, **chunkArgs(c)) for c in desc["zip"] ))
             
