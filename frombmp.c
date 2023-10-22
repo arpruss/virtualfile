@@ -253,7 +253,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 		end = total;
 	}
     
-    if (mode == GFX_SKYDIVER) // || mode == GFX_SPRINT_SPRITES) 
+    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT_SPRITES) 
         rev = 1;
     
     fprintf(stderr,"mode:%d total:%d width:%d height:%d size:%d\n", mode, total, width, height, regionSize);
@@ -305,17 +305,8 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 			}
             else if (mode == GFX_WARLORDS) {
                     int delta = start>0 ? (-1536-512) : 0;
-                    v = get_from_bmp(bmp, bmpX+x, (bmpY+width*c+y+delta+4096)%4096);
+                    v = get_from_bmp(bmp, bmpX+x, (bmpY+height*c+y+delta+4096)%4096);
             }
-			else if (mode == GFX_SKYDIVER) {
-		        	v = get_from_bmp(bmp, bmpX+x, bmpY+width*c+y); // height?
-                    //v = v ? 1 : 0;
-		        	//v = get_from_bmp(bmp, bmpX+y, bmpY+height*c+x);
-			}
-			else if (mode == GFX_SPRINT_SPRITES) {
-		        	v = get_from_bmp(bmp, bmpX+x, bmpY+height*c+y);
-//                    rev = 1;
-			}
 			else {
 		        	v = get_from_bmp(bmp, bmpX+x, bmpY+height*c+y);
 			}
@@ -619,12 +610,12 @@ void encode_chunk(uint8_t* buf, unsigned size, uint8_t* bmp, struct rom_info* ch
     */
 
     encode_layout(buf, bmp, rlen, chunk->layout, chunk->start, chunk->bmpX, chunk->bmpY, chunk->mode);
-	
-	if (chunk->mode == GFX_SPRINT_TILES || chunk->mode == GFX_SPRINT_TILES) {
-		for (unsigned i = 0 ; i < 512 ; i++) 
+    
+	if (chunk->mode == GFX_SPRINT_TILES || chunk->mode == GFX_SPRINT_SPRITES) {
+		for (unsigned i = 0 ; i < 512 ; i++) {
 			buf[512+i] = buf[i] & 0xF;
-		for (unsigned i = 0 ; i < 256 ; i++)
-			buf[i] >>= 4;
+			buf[i] >>= 4;        
+        }
 	}
 }
 

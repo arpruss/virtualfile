@@ -1,0 +1,18 @@
+
+(
+    {
+        "outPath": "/sprint2.zip",
+        "zip": [
+            { "outPath":"6290-01.b1", "inPath":"FOCAL_Emulator/Sprint2.bin", "length":0x800 },
+            { "outPath":"6290-01.c1", "inPath":"FOCAL_Emulator/Sprint2.bin", "offset":0x800, "length":0x800 },
+            { "outPath":"6404.d1", "inPath":"FOCAL_Emulator/Sprint2.bin", "offset":0x1000, "length":0x800 },
+            { "outPath":"6404.e1", "inPath":"FOCAL_Emulator/Sprint2.bin", "offset":0x1800, "length":0x800 },
+            { "outPath":"6400-01.m2", "inPath":"zero:256" },
+            { "outPath":"6401-01.e2", "inPath":"zero:32" },
+            { "outPath":"6396-01.p4", "inPath":"pipe:./frombmp sprint2 0 FOCAL_Emulator/Sprint2Tiles.bmp", "offset":0x0, "length":0x200 },
+            { "outPath":"6397-01.r4", "inPath":"pipe:./frombmp sprint2 0 FOCAL_Emulator/Sprint2Tiles.bmp", "offset":0x200, "length":0x200 },
+            { "outPath":"6399-01.j6", "inPath":"pipe:./frombmp sprint2 1 FOCAL_Emulator/Sprint2Sprites.bmp", "offset":0x0, "length":0x200 },
+            { "outPath":"6398-01.k6", "inPath":"pipe:./frombmp sprint2 1 FOCAL_Emulator/Sprint2Sprites.bmp", "offset":0x200, "length":0x200 },
+        ]
+        },
+)
