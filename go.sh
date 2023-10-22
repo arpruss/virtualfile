@@ -5,5 +5,5 @@ until [ -f mem/*.zip ]
 do
     sleep 0.5
 done
-~/win/Downloads/mame/vmame64 -rompath mem mem/*
+~/win/Downloads/mame/vmame64 -mouse -rompath mem mem/*
 kill $pid

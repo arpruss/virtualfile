@@ -217,8 +217,8 @@ static struct Layout skydiver_motionlayout =
 struct rom_info chunks[] = {
     { "centiped", 0, 0, 4096, GFX_CENTIPED, &centipede_spritelayout,  8 },
     { "centiped", 0, 0, 4096, GFX_CENTIPED, &centipede_charlayout, 0 },
-    { "milliped", 0, 0, 4096, GFX_MILLIPED, &centipede_spritelayout,  },
-    { "milliped", 0, 0, 4096, GFX_MILLIPED, &centipede_charlayout,  },
+    { "milliped", 0, 0, 4096, GFX_MILLIPED, &centipede_spritelayout, 8 },
+    { "milliped", 0, 0, 4096, GFX_MILLIPED, &centipede_charlayout, 0 },
     { "ccastles", 0, 0, 16384, GFX_CCASTLES, &ccastles_spritelayout, 0 },
     { "warlords", 0, 0, 0x800, GFX_WARLORDS, &warlords_charlayout, 0 },
     { "warlords", 0, 0x200, 0x600, GFX_WARLORDS, &warlords_charlayout, 0 },
