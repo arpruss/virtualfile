@@ -36,6 +36,7 @@ struct rom_info
     unsigned bmpY;
 };
 
+#define GFX_DEFAULT 0
 #define GFX_CENTIPED 1
 #define GFX_CCASTLES 2
 #define GFX_MILLIPED 3
@@ -44,6 +45,29 @@ struct rom_info
 #define GFX_SKYDIVER     7
 #define GFX_MONTECAR 8
 
+
+static struct Layout sbrkout_charlayout =
+{
+    8,8,
+    64,
+    1,
+    { 0 },
+    { 4, 5, 6, 7, 0x200*8 + 4, 0x200*8 + 5, 0x200*8 + 6, 0x200*8 + 7 },
+    { 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+    8*8
+};
+
+
+static struct Layout sbrkout_balllayout =
+{
+    3,3,
+    2,
+    1,
+    { 0 },
+    { 0, 1, 2 },
+    { 0*8, 1*8, 2*8 },
+    3*8
+};
 
 static struct Layout montecar_text_layout =
 {
@@ -232,6 +256,9 @@ struct rom_info chunks[] = {
     { "montecar", 2, 0, 0x800, GFX_MONTECAR, &montecar_car_layout, 0 },
     { "montecar", 3, 0, 0x800, GFX_MONTECAR, &montecar_car_layout, 0 },
     
+    { "sbrkout", 0, 0, 0x400, GFX_DEFAULT, &sbrkout_charlayout, 0 },
+    { "sbrkout", 1, 0, 0x20, GFX_DEFAULT, &sbrkout_balllayout, 0 },
+
     { NULL }
 };
 

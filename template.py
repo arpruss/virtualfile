@@ -52,7 +52,7 @@ def filter_nibhi(data):
 def filter_none(data):
     return data
         
-filters = { None: filter_none, "neogeo_sfix": filter_neogeo_sfix, "niblo": filter_niblo, "nibhi": filter_nibhi }
+filters = { None: filter_none, "neogeo_sfix": filter_neogeo_sfix, "niblo": filter_niblo, "nibhi": filter_nibhi, }
         
 def getItemHelper(read, length, key):
     if isinstance(key, slice):
