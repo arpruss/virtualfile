@@ -1,0 +1,14 @@
+
+(
+    {
+        "outPath": "/dominos.zip",
+        "zip": [
+            { "outPath":"7352-02.d1", "inPath":"FOCAL_Emulator/Dominos.bin", "length":0x800 },
+            { "outPath":"7438-02.e1", "inPath":"FOCAL_Emulator/Dominos.bin", "offset":0x800, "length":0x800 },
+            { "outPath":"6400-01.m2", "inPath":"zero:256" },
+            { "outPath":"6401-01.e2", "inPath":"zero:32" },
+            { "outPath":"7439-01.p4", "inPath":"pipe:./frombmp dominos 0 FOCAL_Emulator/DominosTiles.bmp", "offset":0x0, "length":0x200 },
+            { "outPath":"7440-01.r4", "inPath":"pipe:./frombmp dominos 0 FOCAL_Emulator/DominosTiles.bmp", "offset":0x200, "length":0x200 },
+        ]
+        },
+)

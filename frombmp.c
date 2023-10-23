@@ -418,6 +418,8 @@ struct rom_info chunks[] = {
     { "sprint2", 0, 0, 0x400, GFX_SPRINT, &sprint_tile_layout, 0 },
     { "sprint2", 1, 0, 0x400, GFX_SPRINT, &sprint_car_layout, 0 },
     
+    { "dominos", 0, 0, 0x400, GFX_SPRINT, &sprint_tile_layout, 0 },
+
     { "montecar", 0, 0, 0x400, GFX_MONTECAR, &montecar_text_layout, 0 },
     { "montecar", 1, 0, 0x800, GFX_MONTECAR, &firetrk_tile_layout, 0 },
     { "montecar", 2, 0, 0x800, GFX_MONTECAR, &montecar_car_layout, 0 },
