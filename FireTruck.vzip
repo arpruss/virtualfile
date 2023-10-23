@@ -1,0 +1,23 @@
+(
+    {
+        "outPath": "/firetrk.zip",
+        "zip": [
+            { "outPath":"32823-02.c1", "inPath":"FOCAL_Emulator/FireTruck.bin", "length":0x800 },
+            { "outPath":"32824-01.d1", "inPath":"FOCAL_Emulator/FireTruck.bin", "length":0x800, "offset":0x800 },
+            { "outPath":"32816-01.k1", "inPath":"FOCAL_Emulator/FireTruck.bin", "filter":"nibhi", "length":0x800, "offset":0x1000 },
+            { "outPath":"32820-01.k2", "inPath":"FOCAL_Emulator/FireTruck.bin", "filter":"niblo", "length":0x800, "offset":0x1000 },
+            { "outPath":"32815-01.j1", "inPath":"FOCAL_Emulator/FireTruck.bin", "filter":"nibhi", "length":0x800, "offset":0x1800 },
+            { "outPath":"32819-01.j2", "inPath":"FOCAL_Emulator/FireTruck.bin", "filter":"niblo", "length":0x800, "offset":0x1800 },
+
+            { "outPath":"32827-01.r3", "inPath":"pipe:./frombmp firetrk 0 FOCAL_Emulator/FireTruckTiles1.bmp" }, #text
+            { "outPath":"32828-02.f5", "inPath":"pipe:./frombmp firetrk 1 FOCAL_Emulator/FireTruckTiles2.bmp" }, #tiles
+            { "outPath":"32831-01.p7", "inPath":"pipe:./frombmp firetrk 2 FOCAL_Emulator/FireTruckSprites1.bmp" }, #car
+            { "outPath":"032831-01.p7", "inPath":"pipe:./frombmp firetrk 2 FOCAL_Emulator/FireTruckSprites1.bmp" }, #car
+            { "outPath":"32829-01.j5", "inPath":"pipe:./frombmp firetrk 3 FOCAL_Emulator/FireTruckSprites2.bmp", "length":0x800 }, #trailer
+            { "outPath":"32830-01.l5", "inPath":"pipe:./frombmp firetrk 3 FOCAL_Emulator/FireTruckSprites2.bmp", "offset":0x800 }, #trailer
+            
+            { "outPath":"9114.prm", "inPath":"zero:256" },
+            { "outPath":"009114.prm", "inPath":"zero:256" },
+        ]
+        },
+)
