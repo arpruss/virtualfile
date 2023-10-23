@@ -1,0 +1,21 @@
+(
+    {
+        "outPath": "/superbug.zip",
+        "zip": [
+            { "outPath":"9121.d1", "inPath":"FOCAL_Emulator/SuperBug.bin", "length":0x800 },
+            { "outPath":"9122.c1", "inPath":"FOCAL_Emulator/SuperBug.bin", "length":0x800, "offset":0x800 },
+            { "outPath":"9123.a1", "inPath":"FOCAL_Emulator/SuperBug.bin", "length":0x800, "offset":0x1000 },
+
+            { "outPath":"9124.m3", "inPath":"pipe:./frombmp superbug 0 FOCAL_Emulator/SuperBugTiles1.bmp", "length":0x400 }, #text
+            { "outPath":"9471.n3", "inPath":"pipe:./frombmp superbug 0 FOCAL_Emulator/SuperBugTiles1.bmp", "offset":0x400 }, #text
+            { "outPath":"9126.f5", "inPath":"pipe:./frombmp superbug 1 FOCAL_Emulator/SuperBugTiles2.bmp", "length":0x400 }, #tiles
+            { "outPath":"9472.h5", "inPath":"pipe:./frombmp superbug 1 FOCAL_Emulator/SuperBugTiles2.bmp", "offset":0x400, "length":0x400 }, #tiles
+            { "outPath":"9127.e5", "inPath":"pipe:./frombmp superbug 1 FOCAL_Emulator/SuperBugTiles2.bmp", "offset":0x800 }, #tiles
+            { "outPath":"9125.k6", "inPath":"pipe:./frombmp superbug 2 FOCAL_Emulator/SuperBugSprites.bmp" }, #car
+            { "outPath":"009125.k6", "inPath":"pipe:./frombmp superbug 2 FOCAL_Emulator/SuperBugSprites.bmp" }, #car
+            
+            { "outPath":"9114.prm", "inPath":"zero:256" },
+            { "outPath":"009114.prm", "inPath":"zero:256" },
+        ]
+        },
+)

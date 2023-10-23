@@ -45,6 +45,7 @@ struct rom_info
 #define GFX_SKYDIVER     7
 #define GFX_MONTECAR 8
 #define GFX_FIRETRUCK_CAR 9
+#define GFX_SUPERBUG_CAR 10
 
 
 static struct Layout sbrkout_charlayout =
@@ -316,6 +317,82 @@ static struct Layout skydiver_motionlayout =
     8*32
 };
 
+static struct Layout superbug_text_layout =
+{
+    16, 16,
+    32,    
+    1,     
+    { 0 },
+    {
+        0x0C, 0x0D, 0x0E, 0x0F, 0x14, 0x15, 0x16, 0x17,
+        0x1C, 0x1D, 0x1E, 0x1F, 0x04, 0x05, 0x06, 0x07
+    },
+    {
+        0x000, 0x020, 0x040, 0x060, 0x080, 0x0A0, 0x0C0, 0x0E0,
+        0x100, 0x120, 0x140, 0x160, 0x180, 0x1A0, 0x1C0, 0x1E0
+    },
+    0x200
+};
+
+static struct Layout superbug_tile_layout =
+{
+    16, 16, 
+    64,     
+    1,      
+    { 0 },  
+    {
+        0x07, 0x06, 0x05, 0x04, 0x0F, 0x0E, 0x0D, 0x0C,
+        0x17, 0x16, 0x15, 0x14, 0x1F, 0x1E, 0x1D, 0x1C
+    },
+    {
+        0x000, 0x020, 0x040, 0x060, 0x080, 0x0A0, 0x0C0, 0x0E0,
+        0x100, 0x120, 0x140, 0x160, 0x180, 0x1A0, 0x1C0, 0x1E0
+    },
+    0x200
+};
+
+
+static struct Layout superbug_car_layout1 =
+{
+    32, 32, 
+    4,      
+    1,      
+    { 0 },  
+    {
+        0x0000, 0x0100, 0x0200, 0x0300, 0x0400, 0x0500, 0x0600, 0x0700,
+        0x0800, 0x0900, 0x0A00, 0x0B00, 0x0C00, 0x0D00, 0x0E00, 0x0F00,
+        0x1000, 0x1100, 0x1200, 0x1300, 0x1400, 0x1500, 0x1600, 0x1700,
+        0x1800, 0x1900, 0x1A00, 0x1B00, 0x1C00, 0x1D00, 0x1E00, 0x1F00
+    },
+    {
+        0x04, 0x0C, 0x14, 0x1C, 0x24, 0x2C, 0x34, 0x3C,
+        0x44, 0x4C, 0x54, 0x5C, 0x64, 0x6C, 0x74, 0x7C,
+        0x84, 0x8C, 0x94, 0x9C, 0xA4, 0xAC, 0xB4, 0xBC,
+        0xC4, 0xCC, 0xD4, 0xDC, 0xE4, 0xEC, 0xF4, 0xFC
+    },
+    0x001
+};
+
+static struct Layout superbug_car_layout2 =
+{
+    32, 32, 
+    4,      
+    1,      
+    { 0 },  
+    {
+        0x04, 0x0C, 0x14, 0x1C, 0x24, 0x2C, 0x34, 0x3C,
+        0x44, 0x4C, 0x54, 0x5C, 0x64, 0x6C, 0x74, 0x7C,
+        0x84, 0x8C, 0x94, 0x9C, 0xA4, 0xAC, 0xB4, 0xBC,
+        0xC4, 0xCC, 0xD4, 0xDC, 0xE4, 0xEC, 0xF4, 0xFC
+    },
+    {
+        0x0000, 0x0100, 0x0200, 0x0300, 0x0400, 0x0500, 0x0600, 0x0700,
+        0x0800, 0x0900, 0x0A00, 0x0B00, 0x0C00, 0x0D00, 0x0E00, 0x0F00,
+        0x1000, 0x1100, 0x1200, 0x1300, 0x1400, 0x1500, 0x1600, 0x1700,
+        0x1800, 0x1900, 0x1A00, 0x1B00, 0x1C00, 0x1D00, 0x1E00, 0x1F00
+    },
+    0x001
+};
 
 /*
     char* game;
@@ -352,6 +429,11 @@ struct rom_info chunks[] = {
     { "firetrk", 2, 0, 0x400, GFX_FIRETRUCK_CAR, &firetrk_car_layout2, 0 },
     { "firetrk", 3, 0, 0x1000, GFX_MONTECAR, &firetrk_trailer_layout, 0 },
 
+    { "superbug", 0, 0, 0x800, GFX_MONTECAR, &superbug_text_layout, 0 },
+    { "superbug", 1, 0, 0xC00, GFX_MONTECAR, &superbug_tile_layout, 0 },
+    { "superbug", 2, 0, 0x400, GFX_SUPERBUG_CAR, &superbug_car_layout1, 0 },
+    { "superbug", 2, 0, 0x400, GFX_SUPERBUG_CAR, &superbug_car_layout2, 0 },
+
     { "sbrkout", 0, 0, 0x400, GFX_SBRKOUT, &sbrkout_charlayout, 0 },
     { "sbrkout", 1, 0, 0x20, GFX_SBRKOUT, &sbrkout_balllayout, 0 },
 
@@ -383,7 +465,7 @@ static unsigned get_from_bmp(unsigned char* bmp, unsigned x, unsigned y) {
 	unsigned width = get32LE(bmp+14+4);
 	unsigned height = get32LE(bmp+14+8);
 	unsigned bits = get16LE(bmp+0x1c);
-	unsigned offset = width*(height-1-y)+x;
+	unsigned offset = width*(  (2*height-1-y)%height )+x;
 
 	if (bits == 4) {
 		if(offset%2) 
@@ -436,7 +518,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 		end = total;
 	}
     
-    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT || mode == GFX_MONTECAR || mode==GFX_SBRKOUT || mode==GFX_FIRETRUCK_CAR) 
+    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT || mode == GFX_MONTECAR || mode==GFX_SBRKOUT || mode==GFX_FIRETRUCK_CAR || mode == GFX_SUPERBUG_CAR) 
         rev = 1;
     
     fprintf(stderr,"mode:%d total:%d width:%d height:%d size:%d\n", mode, total, width, height, regionSize);
@@ -492,6 +574,9 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 			}
 			else if (mode == GFX_FIRETRUCK_CAR) {
 		        	v = get_from_bmp(bmp, bmpX+x, bmpY+height*c+(height-1-y));
+			}
+			else if (mode == GFX_SUPERBUG_CAR) {
+		        	v = get_from_bmp(bmp, bmpX+x, (bmpY+height*(total-1-c))+(height-1-y));
 			}
 			else {
 		        	v = get_from_bmp(bmp, bmpX+x, bmpY+height*c+y);
