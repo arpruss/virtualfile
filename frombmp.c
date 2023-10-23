@@ -44,6 +44,7 @@ struct rom_info
 #define GFX_WARLORDS     6
 #define GFX_SKYDIVER     7
 #define GFX_MONTECAR 8
+#define GFX_FIRETRUCK_CAR 9
 
 
 static struct Layout sbrkout_charlayout =
@@ -347,8 +348,8 @@ struct rom_info chunks[] = {
     
     { "firetrk", 0, 0, 0x800, GFX_MONTECAR, &firetrk_text_layout, 0 },
     { "firetrk", 1, 0, 0x800, GFX_MONTECAR, &firetrk_tile_layout, 0 },
-    { "firetrk", 2, 0, 0x400, GFX_MONTECAR, &firetrk_car_layout1, 0 },
-    { "firetrk", 2, 0, 0x400, GFX_MONTECAR, &firetrk_car_layout2, 0 },
+    { "firetrk", 2, 0, 0x400, GFX_FIRETRUCK_CAR, &firetrk_car_layout1, 0 },
+    { "firetrk", 2, 0, 0x400, GFX_FIRETRUCK_CAR, &firetrk_car_layout2, 0 },
     { "firetrk", 3, 0, 0x1000, GFX_MONTECAR, &firetrk_trailer_layout, 0 },
 
     { "sbrkout", 0, 0, 0x400, GFX_SBRKOUT, &sbrkout_charlayout, 0 },
@@ -435,7 +436,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 		end = total;
 	}
     
-    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT || mode == GFX_MONTECAR || mode==GFX_SBRKOUT) 
+    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT || mode == GFX_MONTECAR || mode==GFX_SBRKOUT || mode==GFX_FIRETRUCK_CAR) 
         rev = 1;
     
     fprintf(stderr,"mode:%d total:%d width:%d height:%d size:%d\n", mode, total, width, height, regionSize);
@@ -488,6 +489,9 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
             }
 			else if (mode == GFX_MONTECAR || mode == GFX_SBRKOUT) {
 		        	v = get_from_bmp(bmp, bmpX+y, bmpY+width*c+(height-1-x));
+			}
+			else if (mode == GFX_FIRETRUCK_CAR) {
+		        	v = get_from_bmp(bmp, bmpX+x, bmpY+height*c+(height-1-y));
 			}
 			else {
 		        	v = get_from_bmp(bmp, bmpX+x, bmpY+height*c+y);
