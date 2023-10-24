@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <unistd.h>
 
 #define MAX_PLANES 8
 #define MAX_SIZE 256
@@ -15,13 +16,13 @@
 
 struct Layout
 {
-	unsigned width,height; /* width and height (in pixels) of chars/sprites */
-	unsigned total; /* total numer of chars/sprites in the rom */
-	unsigned planes; /* number of bitplanes */
-	unsigned planeoffset[MAX_PLANES]; /* start of every bitplane (in bits) */
-	unsigned xoffset[MAX_SIZE]; /* position of the bit corresponding to the pixel */
-	unsigned yoffset[MAX_SIZE]; /* of the given coordinates */
-	unsigned charincrement; /* distance between two consecutive characters/sprites (in bits) */
+	unsigned width,height;
+	unsigned total;
+	unsigned planes;
+	unsigned planeoffset[MAX_PLANES];
+	unsigned xoffset[MAX_SIZE];
+	unsigned yoffset[MAX_SIZE];
+	unsigned charincrement;
 };
 
 struct rom_info 
@@ -36,17 +37,20 @@ struct rom_info
     unsigned bmpY;
 };
 
-#define GFX_SBRKOUT 0
+#define GFX_DEFAULT 0
 #define GFX_CENTIPED 1
 #define GFX_CCASTLES 2
 #define GFX_MILLIPED 3
 #define GFX_SPRINT   4
+#define GFX_SBRKOUT 5
 #define GFX_WARLORDS     6
 #define GFX_SKYDIVER     7
 #define GFX_MONTECAR 8
 #define GFX_FIRETRUCK_CAR 9
 #define GFX_SUPERBUG_CAR 10
-
+#define GFX_DESTROYER_MAJOR 11
+#define GFX_DESTROYER 12
+#define GFX_DESTROYER_WAVES 13
 
 static struct Layout sbrkout_charlayout =
 {
@@ -394,6 +398,85 @@ static struct Layout superbug_car_layout2 =
     0x001
 };
 
+static struct Layout destroyr_alpha_num_layout =
+{
+	8, 8,     
+	64,       
+	1,        
+	{ 0 },    
+	{
+		0x4, 0x5, 0x6, 0x7, 0xC, 0xD, 0xE, 0xF
+	},
+	{
+		0x00, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70
+	},
+	0x80      
+};
+
+
+static struct Layout destroyr_minor_object_layout =
+{
+	16, 16,   
+	16,       
+	1,        
+	{ 0 },    
+	{
+	  0x04, 0x05, 0x06, 0x07, 0x0C, 0x0D, 0x0E, 0x0F,
+	  0x14, 0x15, 0x16, 0x17, 0x1C, 0x1D, 0x1E, 0x1F
+	},
+	{
+	  0x000, 0x020, 0x040, 0x060, 0x080, 0x0a0, 0x0c0, 0x0e0,
+	  0x100, 0x120, 0x140, 0x160, 0x180, 0x1a0, 0x1c0, 0x1e0
+	},
+	0x200     
+};
+
+
+static struct Layout destroyr_major_object_layout =
+{
+	64, 16,   
+	4,        
+	2,        
+	{ 1, 0 }, 
+	{
+	  0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E,
+	  0x10, 0x12, 0x14, 0x16, 0x18, 0x1A, 0x1C, 0x1E,
+	  0x20, 0x22, 0x24, 0x26, 0x28, 0x2A, 0x2C, 0x2E,
+	  0x30, 0x32, 0x34, 0x36, 0x38, 0x3A, 0x3C, 0x3E,
+	  0x40, 0x42, 0x44, 0x46, 0x48, 0x4A, 0x4C, 0x4E,
+	  0x50, 0x52, 0x54, 0x56, 0x58, 0x5A, 0x5C, 0x5E,
+	  0x60, 0x62, 0x64, 0x66, 0x68, 0x6A, 0x6C, 0x6E,
+	  0x70, 0x72, 0x74, 0x76, 0x78, 0x7A, 0x7C, 0x7E
+	},
+	{
+	  0x000, 0x080, 0x100, 0x180, 0x200, 0x280, 0x300, 0x380,
+	  0x400, 0x480, 0x500, 0x580, 0x600, 0x680, 0x700, 0x780
+	},
+	0x0800    
+};
+
+
+static struct Layout destroyr_waves_layout =
+{
+	64, 2,   
+	2,       
+	1,       
+	{ 0 },   
+	{
+	  0x00, 0x01, 0x02, 0x03, 0x08, 0x09, 0x0A, 0x0B,
+	  0x10, 0x11, 0x12, 0x13, 0x18, 0x19, 0x1A, 0x1B,
+	  0x20, 0x21, 0x22, 0x23, 0x28, 0x29, 0x2A, 0x2B,
+	  0x30, 0x31, 0x32, 0x33, 0x38, 0x39, 0x3A, 0x3B,
+	  0x40, 0x41, 0x42, 0x43, 0x48, 0x49, 0x4A, 0x4B,
+	  0x50, 0x51, 0x52, 0x53, 0x58, 0x59, 0x5A, 0x5B,
+	  0x60, 0x61, 0x62, 0x63, 0x68, 0x69, 0x6A, 0x6B,
+	  0x70, 0x71, 0x72, 0x73, 0x78, 0x79, 0x7A, 0x7B
+	},
+	{
+	  0x00, 0x80
+	},
+	0x04     
+};
 /*
     char* game;
     unsigned region_index;
@@ -438,6 +521,11 @@ struct rom_info chunks[] = {
 
     { "sbrkout", 0, 0, 0x400, GFX_SBRKOUT, &sbrkout_charlayout, 0 },
     { "sbrkout", 1, 0, 0x20, GFX_SBRKOUT, &sbrkout_balllayout, 0 },
+    
+    { "destroyr", 0, 0, 0x400, GFX_DESTROYER, &destroyr_alpha_num_layout, 0 },
+    { "destroyr", 1, 0, 0x400, GFX_DESTROYER, &destroyr_minor_object_layout, 0 },
+    { "destroyr", 2, 0, 0x800, GFX_DESTROYER_MAJOR, &destroyr_major_object_layout, 0 },
+    { "destroyr", 3, 0, 0x020, GFX_DESTROYER_WAVES, &destroyr_waves_layout, 0 },
 
     { NULL }
 };
@@ -520,7 +608,8 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 		end = total;
 	}
     
-    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT || mode == GFX_MONTECAR || mode==GFX_SBRKOUT || mode==GFX_FIRETRUCK_CAR || mode == GFX_SUPERBUG_CAR) 
+    if (mode == GFX_SKYDIVER || mode == GFX_SPRINT || mode == GFX_MONTECAR || mode==GFX_SBRKOUT || mode==GFX_FIRETRUCK_CAR || mode == GFX_SUPERBUG_CAR
+        || mode == GFX_DESTROYER || mode == GFX_DESTROYER_MAJOR || mode==GFX_DESTROYER_WAVES) 
         rev = 1;
     
     fprintf(stderr,"mode:%d total:%d width:%d height:%d size:%d\n", mode, total, width, height, regionSize);
@@ -579,6 +668,12 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 			}
 			else if (mode == GFX_SUPERBUG_CAR) {
 		        	v = get_from_bmp(bmp, bmpX+x, (bmpY+height*(total-1-c))+(height-1-y));
+			}
+			else if (mode == GFX_DESTROYER || mode == GFX_DESTROYER_MAJOR) {
+		        	v = get_from_bmp(bmp, bmpX+width-1-x, bmpY+height*c+y);
+			}
+			else if (mode == GFX_DESTROYER_WAVES) {
+		        	v = get_from_bmp(bmp, bmpX+width-1-x, bmpY+height*((c+1)%total)+y);
 			}
 			else {
 		        	v = get_from_bmp(bmp, bmpX+x, bmpY+height*c+y);
@@ -884,9 +979,9 @@ void encode_chunk(uint8_t* buf, unsigned size, uint8_t* bmp, struct rom_info* ch
 
     encode_layout(buf, bmp, rlen, chunk->layout, chunk->start, chunk->bmpX, chunk->bmpY, chunk->mode);
     
-	if (chunk->mode == GFX_SPRINT || chunk->mode == GFX_SPRINT) {
-		for (unsigned i = 0 ; i < 512 ; i++) {
-			buf[512+i] = buf[i] & 0xF;
+	if (chunk->mode == GFX_SPRINT || chunk->mode == GFX_DESTROYER_MAJOR) {
+		for (unsigned i = 0 ; i < size / 2 ; i++) {
+			buf[size/2 + i] = buf[i] & 0xF;
 			buf[i] >>= 4;        
         }
 	}

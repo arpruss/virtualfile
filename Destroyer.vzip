@@ -1,0 +1,16 @@
+
+(
+    {
+        "outPath": "/destroyr.zip",
+        "zip": [
+            { "outPath":"30146-01.c3", "inPath":"FOCAL_Emulator/Destroyer.bin", "length":0x800 },
+            { "outPath":"7438-02.e1", "inPath":"FOCAL_Emulator/Destroyer.bin", "offset":0x800, "length":0x800 },
+            { "outPath":"30135-01.p4", "inPath":"pipe:./frombmp destroyr 0 FOCAL_Emulator/DestroyerTiles.bmp", "offset":0x0, "length":0x400 },
+            { "outPath":"30132-01.f4", "inPath":"pipe:./frombmp destroyr 1 FOCAL_Emulator/DestroyerSprites1.bmp", "offset":0x0, "length":0x400 },
+            { "outPath":"30134-01.p8", "inPath":"pipe:./frombmp destroyr 2 FOCAL_Emulator/DestroyerSprites2.bmp", "offset":0x0, "length":0x400 },
+            { "outPath":"30133-01.n8", "inPath":"pipe:./frombmp destroyr 2 FOCAL_Emulator/DestroyerSprites2.bmp", "offset":0x400, "length":0x400 },
+            { "outPath":"30136-01.k2", "inPath":"pipe:./frombmp destroyr 3 FOCAL_Emulator/DestroyerWaves.bmp", "offset":0x0, "length":0x20 },
+            { "outPath":"30131-01.m1", "inPath":"zero:256" },
+        ]
+        },
+)
