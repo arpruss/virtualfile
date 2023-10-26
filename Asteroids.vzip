@@ -1,0 +1,12 @@
+(
+    {
+        "outPath": "/asteroid.zip",
+        "zip": [
+            { "outPath":"035145.02", "inPath":"FOCAL_Emulator/Asteroids.bin", "length":0x800 },
+            { "outPath":"035144.02", "inPath":"FOCAL_Emulator/Asteroids.bin", "length":0x800, "offset":0x800 },
+            { "outPath":"035143.02", "inPath":"FOCAL_Emulator/Asteroids.bin", "length":0x800, "offset":0x1000 },
+            { "outPath":"035127.02", "inPath":"FOCAL_Emulator/Asteroids.bin", "length":0x800, "offset":0x1800 },
+            { "outPath":"034602-01.c8", "inPath":"zero:256" }
+            ],
+    },
+)
