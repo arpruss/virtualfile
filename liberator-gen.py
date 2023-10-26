@@ -41,7 +41,6 @@ elif sys.argv[1] == 'lgsmsbc' or sys.argv[1] == 'lgslsbc':
             sys.stdout.buffer.write(bytes((value>>4,)))
         else:
             sys.stdout.buffer.write(bytes((value&0xF,)))
-    sys.stdout.buffer.write(bytes(128))        
 elif sys.argv[1] == 'ltsmsb':
     sys.stdout.buffer.write(bytearray(ltsmsb))
 elif sys.argv[1] == 'ltslsb':

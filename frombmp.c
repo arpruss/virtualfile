@@ -51,7 +51,42 @@ struct rom_info
 #define GFX_DESTROYER_MAJOR 11
 #define GFX_DESTROYER 12
 #define GFX_DESTROYER_WAVES 13
+#define GFX_DEFAULT_REV 14
 
+static struct Layout canyon_tile_layout =
+{
+	8, 8,
+    64,
+    1,
+    { 0 },
+    {
+		0x4, 0x5, 0x6, 0x7, 0xC, 0xD, 0xE, 0xF
+	},
+	{
+		0x00, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70
+	},
+	0x80
+};
+
+
+static struct Layout canyon_sprite_layout =
+{
+	32, 16,
+	4,
+	1,
+	{ 0 },
+	{
+		0x007, 0x006, 0x005, 0x004, 0x003, 0x002, 0x001, 0x000,
+		0x00F, 0x00E, 0x00D, 0x00C, 0x00B, 0x00A, 0x009, 0x008,
+		0x107, 0x106, 0x105, 0x104, 0x103, 0x102, 0x101, 0x100,
+		0x10F, 0x10E, 0x10D, 0x10C, 0x10B, 0x10A, 0x109, 0x108
+	},
+	{
+		0x00, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70,
+		0x80, 0x90, 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xF0
+	},
+	0x200
+};
 static struct Layout sbrkout_charlayout =
 {
     8,8,
@@ -527,6 +562,9 @@ struct rom_info chunks[] = {
     { "destroyr", 2, 0, 0x800, GFX_DESTROYER_MAJOR, &destroyr_major_object_layout, 0 },
     { "destroyr", 3, 0, 0x020, GFX_DESTROYER_WAVES, &destroyr_waves_layout, 0 },
 
+    { "canyon", 0, 0, 0x400, GFX_DEFAULT_REV, &canyon_tile_layout, 0 },
+    { "canyon", 1, 0, 0x100, GFX_DEFAULT_REV, &canyon_sprite_layout, 0 },
+    
     { NULL }
 };
 
@@ -609,7 +647,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 	}
     
     if (mode == GFX_SKYDIVER || mode == GFX_SPRINT || mode == GFX_MONTECAR || mode==GFX_SBRKOUT || mode==GFX_FIRETRUCK_CAR || mode == GFX_SUPERBUG_CAR
-        || mode == GFX_DESTROYER || mode == GFX_DESTROYER_MAJOR || mode==GFX_DESTROYER_WAVES) 
+        || mode == GFX_DESTROYER || mode == GFX_DESTROYER_MAJOR || mode==GFX_DESTROYER_WAVES || mode==GFX_DEFAULT_REV) 
         rev = 1;
     
     fprintf(stderr,"mode:%d total:%d width:%d height:%d size:%d\n", mode, total, width, height, regionSize);

@@ -1,0 +1,15 @@
+
+(
+    {
+        "outPath": "/canyon.zip",
+        "zip": [
+            { "outPath":"9499-01.j1", "inPath":"FOCAL_Emulator/CanyonBomber.bin", "filter":"niblo", "length":0x400, "offset":0x0 },
+            { "outPath":"9503-01.p1", "inPath":"FOCAL_Emulator/CanyonBomber.bin", "filter":"nibhi", "length":0x400, "offset":0x0 },
+            { "outPath":"9496-01.d1", "inPath":"FOCAL_Emulator/CanyonBomber.bin", "offset":0x800, "length":0x800 },
+            { "outPath":"9492-01.n8", "inPath":"pipe:./frombmp canyon 0 FOCAL_Emulator/CanyonBomberTiles.bmp", "offset":0x0, "length":0x400 },
+            { "outPath":"9506-01.m5", "inPath":"pipe:./frombmp canyon 1 FOCAL_Emulator/CanyonBomberSprites.bmp", "offset":0x0, "length":0x100, "filter":"niblo" },
+            { "outPath":"9505-01.n5", "inPath":"pipe:./frombmp canyon 1 FOCAL_Emulator/CanyonBomberSprites.bmp", "offset":0x0, "length":0x100, "filter":"nibhi" },
+            { "outPath":"9491-01.j6", "inPath":"zero:0x100", },
+        ]
+        },
+)
