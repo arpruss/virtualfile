@@ -1,0 +1,15 @@
+(
+    {
+        "outPath": "/spacduel.zip",
+        "zip": [
+            { "outPath":"136006.106", "inPath":"FOCAL_Emulator/Space Duel.bin", "length":0x800 },
+            { "outPath":"136006.107", "inPath":"FOCAL_Emulator/Space Duel.bin", "length":0x1000, "offset":0x800 },
+            { "outPath":"136006.201", "inPath":"FOCAL_Emulator/Space Duel.bin", "length":0x1000, "offset":0x1800 },
+            { "outPath":"136006.102", "inPath":"FOCAL_Emulator/Space Duel.bin", "length":0x1000, "offset":0x2800 },
+            { "outPath":"136006.103", "inPath":"FOCAL_Emulator/Space Duel.bin", "length":0x1000, "offset":0x3800 },
+            { "outPath":"136006.104", "inPath":"FOCAL_Emulator/Space Duel.bin", "length":0x1000, "offset":0x4800 },
+            { "outPath":"136006.105", "inPath":"FOCAL_Emulator/Space Duel.bin", "length":0x1000, "offset":0x5800 },
+            { "outPath":"136002-125.n4", "inPath":"zero:0x100" },
+            ],
+    },
+)

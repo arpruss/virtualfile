@@ -1,0 +1,20 @@
+
+
+(
+    {
+        "outPath": "/bwidow.zip",
+        "zip": [
+            { "outPath":"136017.107", "inPath":"FOCAL_Emulator/Black Widow.bin", "length":0x800 },
+            { "outPath":"136017.108", "inPath":"FOCAL_Emulator/Black Widow.bin", "length":0x1000, "offset":0x800 },
+            { "outPath":"136017.109", "inPath":"FOCAL_Emulator/Black Widow.bin", "length":0x1000, "offset":0x1800 },
+            { "outPath":"136017.110", "inPath":"FOCAL_Emulator/Black Widow.bin", "length":0x1000, "offset":0x2800 },
+            { "outPath":"136017.101", "inPath":"FOCAL_Emulator/Black Widow.bin", "length":0x1000, "offset":0x3800 },
+            { "outPath":"136017.102", "inPath":"FOCAL_Emulator/Black Widow.bin", "length":0x1000, "offset":0x4800 },
+            { "outPath":"136017.103", "inPath":"FOCAL_Emulator/Black Widow.bin", "length":0x1000, "offset":0x5800 },
+            { "outPath":"136017.104", "inPath":"FOCAL_Emulator/Black Widow.bin", "length":0x1000, "offset":0x6800 },
+            { "outPath":"136017.105", "inPath":"FOCAL_Emulator/Black Widow.bin", "length":0x1000, "offset":0x7800 },
+            { "outPath":"136017.106", "inPath":"FOCAL_Emulator/Black Widow.bin", "length":0x1000, "offset":0x8800 },
+            { "outPath":"136002-125.n4", "inPath":"zero:0x100" },
+            ],
+    },
+)
