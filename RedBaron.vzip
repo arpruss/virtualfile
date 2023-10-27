@@ -1,0 +1,15 @@
+(
+    {
+        "outPath": "/redbaron.zip",
+        "zip": [
+            { "outPath":"037587.01", "inPath":"pipe:python pad.py 'FOCAL_Emulator/Red Baron.bin' 0 0x800 0 0 0   0x1000 0x800 0 0 0" },
+            { "outPath":"037000.01e", "inPath":"FOCAL_Emulator/Red Baron.bin", "length":0x800, "offset":0x800 },
+            { "outPath":"036998.01e", "inPath":"", "length":"", "offset":0x1800 },
+            { "outPath":"036997.01e", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"036996.01e", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"036995.01e", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"037006.01e", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"037007.01e", "inPath":"", "length":"", "offset":"" },
+            ],
+    },
+)
