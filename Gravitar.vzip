@@ -1,0 +1,18 @@
+
+(
+    {
+        "outPath": "/gravitar.zip",
+        "zip": [
+            { "outPath":"136010.210", "inPath":"FOCAL_Emulator/Gravitar.bin", "length":0x800 },
+            { "outPath":"136010.207", "inPath":"FOCAL_Emulator/Gravitar.bin", "length":0x1000, "offset":0x800 },
+            { "outPath":"136010.208", "inPath":"FOCAL_Emulator/Gravitar.bin", "length":0x1000, "offset":0x1800 },
+            { "outPath":"136010.309", "inPath":"FOCAL_Emulator/Gravitar.bin", "length":0x1000, "offset":0x2800 },
+            { "outPath":"136010.301", "inPath":"FOCAL_Emulator/Gravitar.bin", "length":0x1000, "offset":0x3800 },
+            { "outPath":"136010.302", "inPath":"FOCAL_Emulator/Gravitar.bin", "length":0x1000, "offset":0x4800 },
+            { "outPath":"136010.303", "inPath":"FOCAL_Emulator/Gravitar.bin", "length":0x1000, "offset":0x5800 },
+            { "outPath":"136010.304", "inPath":"FOCAL_Emulator/Gravitar.bin", "length":0x1000, "offset":0x6800 },
+            { "outPath":"136010.305", "inPath":"FOCAL_Emulator/Gravitar.bin", "length":0x1000, "offset":0x7800 },
+            { "outPath":"136010.306", "inPath":"FOCAL_Emulator/Gravitar.bin", "length":0x1000, "offset":0x8800 },
+            ],
+    },
+)
