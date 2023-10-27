@@ -64,6 +64,17 @@ def getItemHelper(read, length, key):
 
 class FileChunk(object):
     def __init__(self, inPath, outPath=None, offset=0, spacing=1, length=None, cache=False, filter=None, chunkFiles=None):
+        if inPath == "":
+            inPath = FileChunk.prevInPath
+        if offset == "":
+            offset = FileChunk.prevOffset + FileChunk.prevLength * FileChunk.prevSpacing
+        if length == "":
+            length = FileChunk.prevLength
+        if spacing == "":
+            spacing = FileChunk.prevSpacing
+        if filter == "":
+            filter = FileChunk.prevFilter
+        
         if chunkFiles is None:
             chunkFiles = {}
         self.chunkFiles = chunkFiles
@@ -90,6 +101,12 @@ class FileChunk(object):
         self.time = (now.time().second//2) | (now.time().minute<<5) | (now.time().hour<<11)
         self.zipShortHeader = b''
         self.zipChunkLength = self.length
+        
+        FileChunk.prevInPath = inPath
+        FileChunk.prevOffset = offset
+        FileChunk.prevLength = length
+        FileChunk.prevSpacing = spacing
+        FileChunk.prevFilter = filter
         
     @classmethod
     def openInPath(cls, path, filter, cache):

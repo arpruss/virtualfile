@@ -1,0 +1,14 @@
+(
+    {
+        "outPath": "/llander.zip",
+        "zip": [
+            { "outPath":"034599.01", "inPath":"FOCAL_Emulator/Lunar Lander.bin", "length":0x800 },
+            { "outPath":"034598.01", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"034597.01", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"034572.01", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"034571.01", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"034570.01", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"034569.01", "inPath":"", "length":"", "offset":"" },
+            ],
+    },
+)
