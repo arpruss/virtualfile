@@ -1,0 +1,13 @@
+(
+    {
+        "outPath": "/tempest3.zip",
+        "zip": [
+            { "outPath":"237.002", "inPath":"FOCAL_Emulator/Tempest.bin", "length":0x1000 },
+            { "outPath":"136.002", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"235.002", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"134.002", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"133.002", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"138.002", "inPath":"", "length":"", "offset":"" },
+            ],
+    },
+)
