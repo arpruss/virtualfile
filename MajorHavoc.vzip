@@ -1,0 +1,16 @@
+
+(
+    {
+        "outPath": "/mhavoc.zip",
+        "zip": [
+            { "outPath":"136025.210", "inPath":"pipe:python pad.py 'FOCAL_Emulator/Major Havoc.bin' 0 0x1000 0 0x1000" },
+            { "outPath":"136025.216", "inPath":"FOCAL_Emulator/Major Havoc.bin", "length":0x4000, "offset":0x1000 },
+            { "outPath":"136025.217", "inPath":"FOCAL_Emulator/Major Havoc.bin", "length":0x4000, "offset":0x5000 },
+            { "outPath":"136025.215", "inPath":"FOCAL_Emulator/Major Havoc alpha banks.bin", "length":0x4000 },
+            { "outPath":"136025.318", "inPath":"FOCAL_Emulator/Major Havoc alpha banks.bin", "length":0x4000, "offset":0x4000 },
+            { "outPath":"136025.106", "inPath":"FOCAL_Emulator/Major Havoc vector banks.bin", "length":0x4000 },
+            { "outPath":"136025.107", "inPath":"FOCAL_Emulator/Major Havoc vector banks.bin", "length":0x4000, "offset":0x4000 },
+            { "outPath":"136025.108", "inPath":"FOCAL_Emulator/Major Havoc gamma.bin" },
+           ]
+        },
+)

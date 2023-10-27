@@ -4,7 +4,7 @@
     {
         "outPath": "/sbrkout.zip",
         "zip": [
-            { "outPath":"033453.c1", "inPath":"pipe:python sbrkout_part_0.py 'FOCAL_Emulator/Super Breakout.bin'", "length":0x800 },
+            { "outPath":"033453.c1", "inPath":"pipe:python pad.py 'FOCAL_Emulator/Super Breakout.bin' 0 0x400 0x400 0 0xFF" },
             { "outPath":"033454.d1", "inPath":"FOCAL_Emulator/Super Breakout.bin", "offset":0x400, "length":0x800 },
             { "outPath":"033455.e1", "inPath":"FOCAL_Emulator/Super Breakout.bin", "offset":0xc00, "length":0x800 },
             { "outPath":"033280.p4", "inPath":"pipe:./frombmp sbrkout 0 'FOCAL_Emulator/Super Breakout.bmp'", "offset":0x0, "length":0x200 },

@@ -112,6 +112,7 @@ class FileChunk(object):
                 cached = bytearray(apply(fd.read(size)))
                 #cached = io.BytesIO(apply(fd.read(size)))
                 fd.close()
+                size = len(cached)
                 return size,cached
             return size, fd
         
