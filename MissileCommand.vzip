@@ -1,0 +1,13 @@
+(
+    {
+        "outPath": "/missile.zip",
+        "zip": [
+            { "outPath":"035820.02", "inPath":"FOCAL_Emulator/Missile Command.bin", "length":0x800 },
+            { "outPath":"035821.02", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"035822.02", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"035823.02", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"035824.02", "inPath":"", "length":"", "offset":"" },
+            { "outPath":"035825.02", "inPath":"", "length":"", "offset":"" },
+            ],
+    },
+)
