@@ -52,6 +52,7 @@ struct rom_info
 #define GFX_DESTROYER 12
 #define GFX_DESTROYER_WAVES 13
 #define GFX_DEFAULT_REV 14
+#define GFX_MAZEINV 15
 
 static struct Layout canyon_tile_layout =
 {
@@ -331,6 +332,29 @@ static struct Layout centipede_spritelayout =
 	16*8
 };
 
+static struct Layout mazeinv_charlayout =
+{
+	8,8,
+	256,
+	4,
+	{ FRACTION(1,2), 0 },
+	{ 0, 1, 2, 3, 4, 5, 6, 7 },
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
+	8*8
+};
+
+static struct Layout mazeinv_spritelayout =
+{
+	8,16,
+	256,
+	4,
+	{ FRACTION(1,2), 0 },
+	{ 0, 1, 2, 3, 4, 5, 6, 7 },
+	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
+			8*8, 9*8, 10*8, 11*8, 12*8, 13*8, 14*8, 15*8 },
+	16*8
+};
+
 static struct Layout skydiver_charlayout =
 {
     8,8,
@@ -528,6 +552,8 @@ struct rom_info chunks[] = {
     { "centiped", 0, 0, 4096, GFX_CENTIPED, &centipede_charlayout, 0 },
     { "milliped", 0, 0, 4096, GFX_MILLIPED, &centipede_spritelayout, 8 },
     { "milliped", 0, 0, 4096, GFX_MILLIPED, &centipede_charlayout, 0 },
+    { "mazeinv", 0, 0, 4096, GFX_MAZEINV, &centipede_spritelayout, 8 },
+    { "mazeinv", 0, 0, 4096, GFX_MAZEINV, &centipede_charlayout, 0 },
     { "ccastles", 0, 0, 16384, GFX_CCASTLES, &ccastles_spritelayout, 0 },
     { "warlords", 0, 0, 0x800, GFX_WARLORDS, &warlords_charlayout, 0 },
     { "warlords", 0, 0x200, 0x600, GFX_WARLORDS, &warlords_charlayout, 0 },
@@ -606,16 +632,29 @@ static unsigned get_from_bmp(unsigned char* bmp, unsigned x, unsigned y) {
 	}
 }
 
+// 0:background
+// 1:text
+// 2:central dotted wall
+// 3:copyright circle
+// 4:tile backgrounds 
+// 5:lemons/stems, spinner insides ??
+// 6:lemons/stems, spinner insides ??
+// 7:apples
+static unsigned char mazeInvRemap[8] = {
+    0, 0, 0, 0, 0, 1, 0, 0
+};
+
 static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regionSize, struct Layout* layout, unsigned start, unsigned bmpX, unsigned bmpY, unsigned mode) {
 	unsigned width = layout->width;
 	unsigned height = layout->height;
 	unsigned region_length = regionSize * 8;
 	unsigned total = IS_FRACTION(layout->total) ? region_length / layout->charincrement * NUMERATOR(layout->total) / DENOMINATOR(layout->total) : layout->total;
-	for(unsigned i=0;i<MAX_PLANES;i++)
+	for(unsigned i=0;i<layout->planes;i++)
 	{
 		int value = layout->planeoffset[i];
 		if (IS_FRACTION(value))
 			layout->planeoffset[i] = OFFSET(value) + region_length * NUMERATOR(value) / DENOMINATOR(value);
+        fprintf(stderr, "plane %x\n", layout->planeoffset[i]/8);
 	}
 	for(unsigned j=0;j<MAX_SIZE;j++) 
 	{
@@ -637,7 +676,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 		c = width == height ? 64 : 0;
 		end = 128;
 	}
-	else if (mode == GFX_MILLIPED) {
+	else if (mode == GFX_MILLIPED || mode == GFX_MAZEINV) {
 		c = width == height ? 0 : 0;
 		end = width == height ? 256 : 128;
 	}
@@ -667,7 +706,7 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
                     v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
 				}
 			}
-			else if (mode == GFX_MILLIPED) {
+			else if (mode == GFX_MILLIPED || mode == GFX_MAZEINV) {
 				if (width==height) {
 					unsigned charNum = c;
 					//charNum %= 256;
@@ -683,12 +722,29 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 						//charNum %= 256;
 					}
                     v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
+                    if (mode == GFX_MAZEINV) {
+                        v &= 3;
+                        if ( charNum >= 64) {
+//                            v = "\x00\x03\x03\x03"[v];
+                        }
+                        
+                    }
 				}
 				else {
 					unsigned charNum = 2*c;
 					if (charNum > 128)
 						charNum -= 127;
                     v = get_from_bmp(bmp, bmpX+y, bmpY+width*charNum+x);
+                    if (mode == GFX_MAZEINV) {
+                        if ( charNum >= 32) {
+                        //    v = "\x00\x03\x03\x03"[v];  // 1->5, 2->blank?!, 3->
+                        }
+                        
+                        //if( x==0 && y ==0) fprintf(stderr, "\n %d ", charNum);
+                        //fprintf(stderr, "%d ", v);
+                        //if (charNum == 127 || charNum == 63)
+                        //    v = 3;
+                    }
 				}
 			}
 			else if (mode == GFX_CCASTLES) {
@@ -716,8 +772,6 @@ static void encode_layout(unsigned char* out, unsigned char* bmp, unsigned regio
 			else {
 		        	v = get_from_bmp(bmp, bmpX+x, bmpY+height*c+y);
 			}
-
-
             
 			for (int plane=0;plane<layout->planes;plane++) {
 				unsigned pos = layout->planeoffset[plane]+layout->xoffset[x]+layout->yoffset[y]+layout->charincrement*(c%total);

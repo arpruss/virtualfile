@@ -12,8 +12,10 @@ from PIL import Image
 # 1 = white
 # 2 = blue
 # 3 = green
-#              x x x
-colorMap = [15,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+#14 = flash red
+#              
+#colorMap = [15,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+colorMap =  [15,15,1,2,3,4,5,6,7,8,9,10,11,12,13,15]
 
 if sys.argv[1] == 'ltsmsbc' or sys.argv[1] == 'ltslsbc':
     for y in range(128):
@@ -60,9 +62,9 @@ elif sys.argv[1] == 'image':
             segments = []
             x = 0
             while x < width:
-                color = image.getpixel((x,y))&0xF
+                color = image.getpixel((x,y))
                 x0 = x
-                while x < width and color == image.getpixel((x,y))&0xF:
+                while x < width and color == image.getpixel((x,y)):
                     x += 1
                 segments.append((color,x-1))
             if len(segments)>32:
@@ -79,7 +81,11 @@ elif sys.argv[1] == 'image':
 
             for i in range(32):
                 color,x = segments[i]
-                color = colorMap[color]
+                if color & 0x10:
+                    color = colorMap[color&~0x10]
+                else:
+                    color = 0xFF
+                #color = colorMap[color&0xF]
                 value = (color & 0xF) << 8
                 value |= (x >> 1) | (x & 1) << 15
                 data[start + 0x1000 + (y<<5) + i] = value >> 8
