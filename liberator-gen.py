@@ -28,11 +28,12 @@ def parseHex(url):
 
 if sys.argv[1] == 'ltsmsbc' or sys.argv[1] == 'ltslsbc':
     for y in range(128):
-        value = math.floor( 0.5 + 255 * math.sqrt( 1-((y-63.5)/64)**2 ) )
+        value = math.floor( 3 + 255 * math.sqrt( 1-((y-63.5)/64)**2 ) )
         if value > 255:
             value = 255
         elif value < 0:
             value = 0
+        #print(" %02x " % value)
         if sys.argv[1] == 'ltsmsbc':
             sys.stdout.buffer.write(bytes((value>>4,)))
         else:
