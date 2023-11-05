@@ -4,6 +4,7 @@ import struct
 import io
 import subprocess
 import ast
+from urllib.request import urlopen
 from datetime import datetime
 
 def filter_neogeo_sfix(data):
@@ -117,6 +118,10 @@ class FileChunk(object):
             data = p.stdout.read()
             #return len(data),io.BytesIO(apply(data))
             return len(data),bytearray(apply(data))
+        elif path.startswith("url:"):
+            with urlopen(path[4:]) as f:
+                data = f.read()
+                return len(data),data
         elif path.startswith("zero:"):
             n = ast.literal_eval(path[5:])
             return n,bytearray(n)
