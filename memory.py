@@ -3,6 +3,8 @@ from __future__ import print_function, absolute_import, division
 
 import logging
 
+from urllib.request import urlopen
+
 from collections import defaultdict
 from errno import ENOENT, ENODATA
 from stat import S_IFDIR, S_IFLNK, S_IFREG
@@ -171,14 +173,22 @@ if __name__ == '__main__':
 
     #logging.basicConfig(level=logging.DEBUG)
     mem = Memory()
-    with open(args.datafile) as f:
-        data = ast.literal_eval(f.read())
-    chunkFiles = {}
-    for line in data:
-        ft = FileTemplate(line, chunkFiles={})
-        mem.create(ft.outPath, line.get("attrs", 0o777))
-        print(line)
-        mem.data[ft.outPath] = ft
-        mem.files[ft.outPath]['st_size'] = len(ft)
+    if args.datafile.startswith("https://") or args.datafile.startswith("http://"):
+        with urlopen(args.datafile) as f:
+            data = f.read()
+            mem.create("/data.bin", 0o777)
+            mem.data["/data.bin"] = data
+            mem.files["/data.bin"]["st_size"] = len(data)
+            print("/data.bin", len(data))
+    else:
+        with open(args.datafile) as f:
+            data = ast.literal_eval(f.read())
+        chunkFiles = {}
+        for line in data:
+            ft = FileTemplate(line, chunkFiles={})
+            mem.create(ft.outPath, line.get("attrs", 0o777))
+            print(line)
+            mem.data[ft.outPath] = ft
+            mem.files[ft.outPath]['st_size'] = len(ft)
     
     fuse = FUSE(mem, args.mount, foreground=True, allow_other=False)
