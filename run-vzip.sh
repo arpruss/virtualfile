@@ -1,6 +1,6 @@
 #!/bin/bash
-#mkdir mnt
-#fusermount -u mnt
+mkdir mnt
+fusermount -u mnt
 echo mounting
 python3 memory.py mnt "$1.vzip" &
 pid=$!
@@ -21,13 +21,15 @@ for x in mnt/*.zip ; do
 done
 echo ready to run $zipfile
 unzip -lv mnt/$zipfile.zip
+#ln -s mnt/$zipfile.zip .
 if [ $fbneo -eq 1 ] ; then
-    echo /home/pi/scripts/retroarch.sh "mnt/$zipfile.zip" fbneo neogeo
+    /home/pi/scripts/retroarch.sh "$zipfile.zip" fbneo neogeo
 else
-    echo /home/pi/scripts/retroarch.sh "mnt/$zipfile.zip" mame2003 mame-libretro
+    ln -s /home/pi/RetroPie/roms/mame-libretro/mame2003 mnt
+    /home/pi/scripts/retroarch.sh "mnt/$zipfile.zip" mame2003 mame-libretro
 #/home/pi/scripts/retroarch-mame.sh "$1.zip"
 fi
-echo killing mount
+echo killing mount process $pid
 kill $pid
-( sleep 1 ; if [ -e mnt ] ; then fusermount -u mnt ; fi ) &
+( sleep 2 ; if [ -e mnt ] ; then fusermount -u mnt ; fi ) &
 

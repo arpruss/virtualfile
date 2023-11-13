@@ -9,7 +9,7 @@
             { "outPath":"037156.1e", "inPath":"FOCAL_Emulator/Warlords.bin", "offset":0x2000, "length":0x800 },
             { "outPath":"037155.1d", "inPath":"FOCAL_Emulator/Warlords.bin", "offset":0x2800, "length":0x800 },
             { "outPath":"037159.6e", "inPath":"pipe:./frombmp warlords 0 FOCAL_Emulator/Warlords.bmp", "offset":0x0, "length":0x800 },
-            { "outPath":"warlord.clr", "inPath":"pipe:python warlord-clr.py" }
+            { "outPath":"warlord.clr", "inPath":"pipe:python3 warlord-clr.py" }
         ]
         },
 )

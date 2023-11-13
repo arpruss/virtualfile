@@ -11,15 +11,15 @@
             { "outPath":"136012.201", "inPath":"FOCAL_Emulator/Liberator.bin", "offset":0x5000, "length":0x1000 },
             { "outPath":"136012.200", "inPath":"FOCAL_Emulator/Liberator.bin", "offset":0x6000, "length":0x1000 },
             
-            { "outPath":"136012.107", "inPath":"pipe:python liberator-gen.py image", "length":0x1000 },
-            { "outPath":"136012.110", "inPath":"pipe:python liberator-gen.py image", "offset":0x1000, "length":0x1000},
-            { "outPath":"136012.109", "inPath":"pipe:python liberator-gen.py image", "offset":0x2000, "length":0x1000 },
-            { "outPath":"136012.108", "inPath":"pipe:python liberator-gen.py image", "offset":0x3000, "length":0x1000 },
+            { "outPath":"136012.107", "inPath":"pipe:python3 liberator-gen.py image", "length":0x1000 },
+            { "outPath":"136012.110", "inPath":"pipe:python3 liberator-gen.py image", "offset":0x1000, "length":0x1000},
+            { "outPath":"136012.109", "inPath":"pipe:python3 liberator-gen.py image", "offset":0x2000, "length":0x1000 },
+            { "outPath":"136012.108", "inPath":"pipe:python3 liberator-gen.py image", "offset":0x3000, "length":0x1000 },
             
-            { "outPath":"136012.123", "inPath":"pipe:python liberator-gen.py ltslsbc" }, # 
-            { "outPath":"136012.124", "inPath":"pipe:python liberator-gen.py ltsmsbc" }, # problem
-            { "outPath":"136012.125", "inPath":"pipe:python liberator-gen.py lgslsbc" },
-            { "outPath":"136012.126", "inPath":"pipe:python liberator-gen.py lgsmsbc" },
+            { "outPath":"136012.123", "inPath":"pipe:python3 liberator-gen.py ltslsbc" }, # 
+            { "outPath":"136012.124", "inPath":"pipe:python3 liberator-gen.py ltsmsbc" }, # problem
+            { "outPath":"136012.125", "inPath":"pipe:python3 liberator-gen.py lgslsbc" },
+            { "outPath":"136012.126", "inPath":"pipe:python3 liberator-gen.py lgsmsbc" },
             
             { "outPath":"136012.021", "inPath":"zero:0x100" },
             { "outPath":"136012.022", "inPath":"zero:0x100" },
