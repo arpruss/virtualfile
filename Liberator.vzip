@@ -16,8 +16,10 @@
             { "outPath":"136012.109", "inPath":"pipe:python3 liberator-gen.py image", "offset":0x2000, "length":0x1000 },
             { "outPath":"136012.108", "inPath":"pipe:python3 liberator-gen.py image", "offset":0x3000, "length":0x1000 },
             
-            { "outPath":"136012.123", "inPath":"pipe:python3 liberator-gen.py ltslsbc" }, # 
-            { "outPath":"136012.124", "inPath":"pipe:python3 liberator-gen.py ltsmsbc" }, # problem
+            #{ "outPath":"136012.123", "inPath":"pipe:python3 liberator-gen.py ltslsbc" }, # 
+            #{ "outPath":"136012.124", "inPath":"pipe:python3 liberator-gen.py ltsmsbc" }, # problem
+            { "outPath":"136012.123", "inPath":"ltslsb" },
+            { "outPath":"136012.124", "inPath":"ltsmsb" },
             { "outPath":"136012.125", "inPath":"pipe:python3 liberator-gen.py lgslsbc" },
             { "outPath":"136012.126", "inPath":"pipe:python3 liberator-gen.py lgsmsbc" },
             

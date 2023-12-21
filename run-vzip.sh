@@ -1,4 +1,5 @@
 #!/bin/bash
+rm -rf mnt
 mkdir mnt
 fusermount -u mnt
 echo mounting
