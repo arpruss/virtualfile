@@ -121,7 +121,7 @@ class FileChunk(object):
         elif path.startswith("url:"):
             with urlopen(path[4:]) as f:
                 data = f.read()
-                return len(data),data
+                return len(data),bytearray(data)
         elif path.startswith("zero:"):
             n = ast.literal_eval(path[5:])
             return n,bytearray(n)
